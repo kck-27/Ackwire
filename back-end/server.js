@@ -23,7 +23,7 @@ app.use(cors())
 // API endpoints
 app.use('/api/user', userRouter)
 app.use('/api/products', productRouter)
-app.use('/api/sercices', serviceRouter)
+app.use('/api/services', serviceRouter)
 
 app.get('/', (req, res) => {
 res.send("Endpoint up")
