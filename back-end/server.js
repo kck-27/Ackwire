@@ -5,6 +5,8 @@ import { config } from 'dotenv'
 import connectToDB from './config/mongo.js'
 import cloudinaryConfig from './config/cloudinary.js'
 import userRouter from './routes/userRoutes.js'
+import productRouter from './routes/productRoutes.js'
+import serviceRouter from './routes/serviceRoutes.js'
 
 // App config
 
@@ -20,6 +22,8 @@ app.use(cors())
 
 // API endpoints
 app.use('/api/user', userRouter)
+app.use('/api/products', productRouter)
+app.use('/api/sercices', serviceRouter)
 
 app.get('/', (req, res) => {
 res.send("Endpoint up")

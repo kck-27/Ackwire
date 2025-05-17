@@ -11,20 +11,24 @@ const signIn = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // Querying by email
     const user = await User.findOne({ email });
 
+    // Handling invalid emails
     if (!user) {
       return res
         .status(400)
-        .json({ status: "false", message: "Invalid email" });
+        .json({ status: "unsuccessful", message: "Invalid email" });
     }
 
+    // Password verification
     const valid = await bcrypt.compare(password, user.password);
 
+    // Sending response
     if (valid) {
       const token = createToken(user._id);
       res.status(200).json({
-        status: "true",
+        status: "successful",
         userObject: {
           name: user.name,
           email: user.email,
@@ -34,7 +38,7 @@ const signIn = async (req, res) => {
         },
       });
     } else {
-      res.status(400).json({ status: "false", message: "Incorrect password" });
+      res.status(400).json({ status: "unsuccessful", message: "Incorrect password" });
     }
   } catch (error) {
     console.log(error);
@@ -46,13 +50,15 @@ const signUp = async (req, res) => {
   try {
     const { name, email, password, userType, businessScale } = req.body;
 
-    // Checking email uniqueness
+    // Querying by email
     const nonUnique = await User.findOne({ email });
+
+    // Checking email uniqueness
     if (nonUnique) {
       return res
         .status(400)
         .json({
-          status: "false",
+          status: "unsuccessful",
           message: "Specified email already registered",
         });
     }
@@ -61,7 +67,7 @@ const signUp = async (req, res) => {
     if (!validator.isEmail(email)) {
       return res
         .status(400)
-        .json({ status: "false", message: "Invalid email" });
+        .json({ status: "unsuccessful", message: "Invalid email" });
     }
 
     // Password validation
@@ -69,7 +75,7 @@ const signUp = async (req, res) => {
       return res
         .status(400)
         .json({
-          status: "false",
+          status: "unsuccessful",
           message:
             "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one symbol.",
         });
@@ -79,13 +85,13 @@ const signUp = async (req, res) => {
     if (userType !== "buyer" && userType !== "seller") {
       return res
         .status(400)
-        .json({ status: "false", message: "User type must be specified" });
+        .json({ status: "unsuccessful", message: "User type must be specified" });
     }
 
     if (userType === "seller" && businessScale === "") {
       return res
         .status(400)
-        .json({ status: "false", message: "Business scale must be specified" });
+        .json({ status: "unsuccessful", message: "Business scale must be specified" });
     }
 
     // Password hashing
@@ -106,7 +112,7 @@ const signUp = async (req, res) => {
 
     // Sending response
     res.status(200).json({
-      status: "true",
+      status: "successful",
       userObject: {
         name: user.name,
         email: user.email,
