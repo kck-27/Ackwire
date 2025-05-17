@@ -4,21 +4,42 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 
 const createToken = (id) => {
-    return jwt.sign({id}, process.env.JWT_SECRET_KEY);
-}
+  return jwt.sign({ id }, process.env.JWT_SECRET_KEY);
+};
 
 const signIn = async (req, res) => {
-    try {
-        const {email, password} = req.body;
-        
-        const user = await User.findOne({email});
+  try {
+    const { email, password } = req.body;
 
-        if (!user) {
-            return res.status(400).json({status: "false", message: "Invalid email"});
-        }
-} catch (error) {
+    const user = await User.findOne({ email });
 
-}
+    if (!user) {
+      return res
+        .status(400)
+        .json({ status: "false", message: "Invalid email" });
+    }
+
+    const valid = await bcrypt.compare(password, user.password);
+
+    if (valid) {
+      const token = createToken(user._id);
+      res.status(200).json({
+        status: "true",
+        userObject: {
+          name: user.name,
+          email: user.email,
+          userType: user.userType,
+          businessScale: user.businessScale,
+          token,
+        },
+      });
+    } else {
+      res.status(400).json({ status: "false", message: "Incorrect password" });
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
 };
 
 const signUp = async (req, res) => {
@@ -26,28 +47,45 @@ const signUp = async (req, res) => {
     const { name, email, password, userType, businessScale } = req.body;
 
     // Checking email uniqueness
-    const nonUnique = await User.findOne({email});
+    const nonUnique = await User.findOne({ email });
     if (nonUnique) {
-        return res.status(400).json({status: "false", message: "Specified email already registered"});
+      return res
+        .status(400)
+        .json({
+          status: "false",
+          message: "Specified email already registered",
+        });
     }
 
     // Email validation
     if (!validator.isEmail(email)) {
-        return res.status(400).json({status: "false", message: "Invalid email"});
+      return res
+        .status(400)
+        .json({ status: "false", message: "Invalid email" });
     }
 
     // Password validation
     if (!validator.isStrongPassword(password)) {
-        return res.status(400).json({status: "false", message: "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one symbol."});
+      return res
+        .status(400)
+        .json({
+          status: "false",
+          message:
+            "Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, one number, and one symbol.",
+        });
     }
 
     // User type validations
     if (userType !== "buyer" && userType !== "seller") {
-        return res.status(400).json({status: "false", message: "User type must be specified"});
+      return res
+        .status(400)
+        .json({ status: "false", message: "User type must be specified" });
     }
 
     if (userType === "seller" && businessScale === "") {
-        return res.status(400).json({status: "false", message: "Business scale must be specified"});
+      return res
+        .status(400)
+        .json({ status: "false", message: "Business scale must be specified" });
     }
 
     // Password hashing
@@ -67,18 +105,19 @@ const signUp = async (req, res) => {
     const token = createToken(user._id);
 
     // Sending response
-    res.status(200).json({status: "true", userObject:{
-      name: user.name,
-      email: user.email,
-      userType: user.userType,
-      businessScale: user.businessScale,
-      token,
-    }});
-
+    res.status(200).json({
+      status: "true",
+      userObject: {
+        name: user.name,
+        email: user.email,
+        userType: user.userType,
+        businessScale: user.businessScale,
+        token,
+      },
+    });
   } catch (error) {
     console.log(error);
-    res.status(500).json({message: error.message});
-    
+    res.status(500).json({ message: error.message });
   }
 };
 
