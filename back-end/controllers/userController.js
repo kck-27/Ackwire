@@ -26,6 +26,33 @@ const signIn = async (req, res) => {
 
     // Sending response
     if (valid) {
+      // const token = createToken(user._id);
+      // res.status(200).json({
+      //   status: "successful",
+      //   userObject: {
+      //     name: user.name,
+      //     email: user.email,
+      //     userType: user.userType,
+      //     businessScale: user.businessScale,
+      //     token,
+      //   },
+      // });
+
+      if (user.userType === "seller") {
+        const token = createToken(user._id);
+        const sellertoken = jwt.sign(process.env.SELLER_SECRET_KEY, process.env.JWT_SECRET_KEY);
+        res.status(200).json({
+        status: "successful",
+        userObject: {
+          name: user.name,
+          email: user.email,
+          userType: user.userType,
+          businessScale: user.businessScale,
+          token,
+          sellertoken
+        },
+      });
+      } else {
       const token = createToken(user._id);
       res.status(200).json({
         status: "successful",
@@ -37,6 +64,8 @@ const signIn = async (req, res) => {
           token,
         },
       });
+      }
+
     } else {
       res.status(400).json({ status: "unsuccessful", message: "Incorrect password" });
     }
@@ -127,6 +156,19 @@ const signUp = async (req, res) => {
   }
 };
 
-const adminSignIn = async (req, res) => {};
+const adminSignIn = async (req, res) => {
+  try {
+    const {email, password} = req.body;
+    if (email === process.env.ADMIN_EMAIL && password === process.env.ADMIN_PASSWORD) {
+      const token = jwt.sign(email+password, process.env.JWT_SECRET_KEY);
+      res.status(200).json({status: "successful", token});
+    } else {
+      res.status(400).json({status: "unsuccessful", message: "Invalid email or password"});
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+};
 
 export { signIn, signUp, adminSignIn };
