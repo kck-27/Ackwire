@@ -123,7 +123,6 @@ const SignIn = ({ setToken, setSellertoken }) => {
         ) : (
           <select
             onChange={(e) => setUserType(e.target.value)}
-            defaultValue={""}
             value={userType}
             name="user_type"
             className="w-full sm:min-h-14 px-3 py-2 border border-gray-500 rounded-xl"
@@ -140,7 +139,6 @@ const SignIn = ({ setToken, setSellertoken }) => {
           <select
             name="business_scale"
             onChange={(e) => setBusinessScale(e.target.value)}
-            defaultValue={""}
             value={businessScale}
             className="w-full sm:min-h-14 px-3 py-2 border border-gray-500 rounded-xl"
             required
