@@ -25,19 +25,56 @@ const SignIn = ({ setToken, setSellertoken }) => {
         });
         if (res.data.status === "successful") {
           setToken(res.data.userObject.token);
-          navigate("/");
           if (res.data.userObject.userType === "seller") {
             setSellertoken(res.data.userObject.sellertoken);
-            navigate("/");
           } else {
             toast.error(res.data.message);
           }
+          toast.success("You have successfully logged in!");
+            navigate("/");
         } else {
           toast.error(res.data.message);
         }
       } catch (error) {
         console.log(error);
         toast.error(error.response?.data?.message || error.message);
+      }
+    } else {
+      if (userType === "buyer") {
+        try {
+          const res = await axios.post(backendURL + "/api/user/sign-up", {
+            name,
+            email,
+            password,
+            userType,
+          });
+          if (res.data.status === "successful") {
+            setCurrentState("Login");
+            toast.success("You have successfully signed up! Kindly log in using the same credentials.");
+            navigate("/sign-in");
+          }
+        } catch (error) {
+          console.log(error);
+          toast.error(error.response?.data?.message || error.message);
+        }
+      } else if (userType === "seller") {
+        try {
+          const res = await axios.post(backendURL + "/api/user/sign-up", {
+            name,
+            email,
+            password,
+            userType,
+            businessScale,
+          });
+          if (res.data.status === "successful") {
+            setCurrentState("Login");
+            toast.success("You have successfully signed up! Kindly log in using the same credentials.");
+            navigate("/sign-in");
+          }
+        } catch (error) {
+          console.log(error);
+          toast.error(error.response?.data?.message || error.message);
+        }
       }
     }
   };
