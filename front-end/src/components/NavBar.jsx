@@ -3,7 +3,7 @@ import { assets } from "../assets/assets";
 import { Link, NavLink } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 
-const NavBar = () => {
+const NavBar = ({sellerToken, setToken, setSellertoken}) => {
   const [visible, setVisible] = useState(false);
   const {setDisplaySearch, getTotalQuantity, navigate} = useContext(ShopContext);
 
@@ -53,7 +53,8 @@ const NavBar = () => {
             <div className="flex flex-col gap-2 w-50 py-3 px-5 bg-slate-100 text-gray-500 rounded">
               <p className="cursor-pointer hover:text-black">My Profile</p>
               <p onClick={() => navigate('/purchases')} className="cursor-pointer hover:text-black">Purchases</p>
-              <p className="cursor-pointer hover:text-black">Sign Out</p>
+              {sellerToken === "" ? "" : <p className="cursor-pointer hover:text-black">Sell</p>}
+              <p onClick={() => {setToken(""); setSellertoken("")}} className="cursor-pointer  hover:text-black">Sign Out</p>
             </div>
           </div>
         </div>
