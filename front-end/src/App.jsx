@@ -16,6 +16,7 @@ import Footer from "./components/Footer";
 import SearchBar from "./components/SearchBar";
 import Checkout from "./pages/Checkout";
 import { ToastContainer, toast } from "react-toastify";
+import Sell from "./pages/Sell";
 
 export const backendURL = import.meta.env.VITE_BACKEND_URL;
 
@@ -66,6 +67,7 @@ const App = () => {
               <Route path="/services" element={<Services />} />
               <Route path="/service/:serviceId" element={<Service />} />
               <Route path="/checkout" element={<Checkout />} />
+              <Route path="/sell/*" element={<Sell sellerToken={sellertoken} />} />
             </Routes>
           </div>
 
