@@ -176,6 +176,7 @@ import cross_icon from './cross_icon.png'
 import add_icon from './add_icon.png'
 import orders_icon from './orders_icon.png'
 import list_icon from './list_icon.png'
+import attach_icon from './attach_icon.png'
 
 export const assets = {
     logo,
@@ -203,7 +204,8 @@ export const assets = {
     cross_icon,
     add_icon,
     orders_icon,
-    list_icon
+    list_icon,
+    attach_icon
 }
 
 export const products = [

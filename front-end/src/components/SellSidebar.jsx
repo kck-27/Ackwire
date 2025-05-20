@@ -6,7 +6,7 @@ import "../SellSidebar.css";
 const SellSidebar = () => {
   return (
     <div className="w-[15%] min-h-screen border-r-2 border-gray-200">
-      <div className="flex flex-col gap-5 pt-7 pl-[10%] mr-3 md:mr-15 text-[16px]">
+      <div className="flex flex-col gap-5 pt-7 pl-[10%] mr-3 md:mr-15 text-[14px]">
         <NavLink
           className={({ isActive }) =>
             `flex gap-3 items-center border border-gray-300 border-r-1 px-4 py-3 rounded-3xl${
