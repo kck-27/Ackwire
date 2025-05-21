@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
-const SignIn = ({ setToken, setSellertoken }) => {
+const SignIn = ({ setToken, setSellertoken, setUserEmail, setUserBusinessScale }) => {
   const [currentState, setCurrentState] = useState("Sign Up");
   const [userType, setUserType] = useState("");
   const [name, setName] = useState("");
@@ -25,6 +25,8 @@ const SignIn = ({ setToken, setSellertoken }) => {
         });
         if (res.data.status === "successful") {
           setToken(res.data.userObject.token);
+          setUserEmail(res.data.userObject.email);
+          setUserBusinessScale(res.data.userObject.businessScale);
           if (res.data.userObject.userType === "seller") {
             setSellertoken(res.data.userObject.sellertoken);
           } else {

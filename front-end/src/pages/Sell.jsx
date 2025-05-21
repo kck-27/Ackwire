@@ -5,7 +5,7 @@ import Add from "./Add";
 import List from "./List";
 import Orders from "./Orders";
 
-const Sell = ({ sellerToken }) => {
+const Sell = ({ sellerToken, userEmail, userBusinessScale }) => {
   return (
     <>
       {sellerToken === "" ? (
@@ -16,9 +16,9 @@ const Sell = ({ sellerToken }) => {
             <SellSidebar />
             <div className="w-[75%] mx-auto ml-[max(5vw, 20px)] my-8 text-gray-500 text-base">
                 <Routes>
-                    <Route path="/add" element={<Add sellerToken={sellerToken} />} />
-                    <Route path="/list" element={<List sellerToken={sellerToken} />} />
-                    <Route path="/orders" element={<Orders sellerToken={sellerToken} />} />
+                    <Route path="/add" element={<Add sellerToken={sellerToken} userEmail={userEmail} userBusinessScale={userBusinessScale}/>} />
+                    <Route path="/list" element={<List sellerToken={sellerToken} userEmail={userEmail} userBusinessScale={userBusinessScale}/>} />
+                    <Route path="/orders" element={<Orders sellerToken={sellerToken} userEmail={userEmail} userBusinessScale={userBusinessScale}/>} />
                 </Routes>
             </div>
           </div>

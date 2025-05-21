@@ -4,7 +4,7 @@ import Product from '../models/productModel.js';
 // Create a new product
 const createProduct = async (req, res) => {
     try {
-        const {name, description, price, category, subCategory, companyScale, rating, terms, features, more_info, color, bestseller} = req.body;
+        const {name, description, price, category, subCategory, companyScale, rating, terms, features, more_info, color, bestseller, userEmail} = req.body;
         const date = new Date().getTime();
         const image1 = req.files.image1 && req.files.image1[0];
         const image2 = req.files.image2 && req.files.image2[0];
@@ -34,7 +34,8 @@ const createProduct = async (req, res) => {
             features: JSON.parse(features), 
             more_info: JSON.parse(more_info), 
             color: JSON.parse(color), 
-            bestseller: bestseller === "true" ? true : false
+            bestseller: bestseller === "true" ? true : false,
+            userEmail
         }
 
         console.log(productObject);
@@ -61,6 +62,17 @@ const getAllProducts = async (req, res) => {
 
 }
 
+// Get all Products by user email
+const getAllProductsByUserEmail = async (req, res) => {
+    try {
+        const products = await Product.find({}).where({userEmail: req.body.userEmail});
+        res.status(200).json({status: "successful", products})
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({status: "unsuccessful", message: error.message});
+    }
+}
+
 // Get product by ID
 const getProductById = async (req, res) => {
     try {
@@ -79,7 +91,7 @@ const getProductById = async (req, res) => {
 // Update product by ID
 const updateProductById = async (req, res) => {
     try {
-        const {id, name, description, price, category, subCategory, companyScale, rating, terms, features, more_info, color, bestseller} = req.body;
+        const {id, name, description, price, category, subCategory, companyScale, rating, terms, features, more_info, color, bestseller, userEmail} = req.body;
         const date = new Date().getTime();
         const image1 = req.files.image1 && req.files.image1[0];
         const image2 = req.files.image2 && req.files.image2[0];
@@ -109,7 +121,8 @@ const updateProductById = async (req, res) => {
             features: JSON.parse(features), 
             more_info: JSON.parse(more_info), 
             color: JSON.parse(color), 
-            bestseller: bestseller === "true" ? true : false
+            bestseller: bestseller === "true" ? true : false,
+            userEmail
         }
 
         console.log(productObject);
@@ -135,4 +148,4 @@ const deleteProductById = async (req, res) => {
     }
 }
 
-export { createProduct, getAllProducts, getProductById, updateProductById, deleteProductById };
+export { createProduct, getAllProducts, getAllProductsByUserEmail, getProductById, updateProductById, deleteProductById };

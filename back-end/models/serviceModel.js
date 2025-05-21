@@ -14,7 +14,8 @@ const serviceSchema = new mongoose.Schema({
   features: { type: Array, required: true },
   more_info: { type: Array, required: true },
   mode: { type: Array, required: true },
-  bestseller: { type: Boolean, required: true }
+  bestseller: { type: Boolean, required: true },
+  userEmail: { type: String, required: true}
 });
 
 const Service = mongoose.models.Service || mongoose.model("Service", serviceSchema);

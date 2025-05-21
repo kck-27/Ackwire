@@ -14,7 +14,8 @@ const productSchema = new mongoose.Schema({
   features: { type: Array, required: true },
   more_info: { type: Array, required: true },
   color: { type: Array, required: true },
-  bestseller: { type: Boolean, required: true }
+  bestseller: { type: Boolean, required: true },
+  userEmail: { type: String, required: true}
 });
 
 const Product = mongoose.models.Product || mongoose.model("Product", productSchema);

@@ -1,6 +1,6 @@
 import React from 'react'
 
-const List = ({sellerToken}) => {
+const List = ({sellerToken, userEmail, userBusinessScale}) => {
   return (
     <div>List</div>
   )

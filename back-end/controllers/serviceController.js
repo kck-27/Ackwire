@@ -4,7 +4,7 @@ import Service from '../models/serviceModel.js';
 // Create a new service
 const createService = async (req, res) => {
     try {
-        const {name, description, price, category, subCategory, companyScale, rating, terms, features, more_info, mode, bestseller} = req.body;
+        const {name, description, price, category, subCategory, companyScale, rating, terms, features, more_info, mode, bestseller, userEmail} = req.body;
         const date = new Date().getTime();
         const image1 = req.files.image1 && req.files.image1[0];
         const image2 = req.files.image2 && req.files.image2[0];
@@ -34,7 +34,8 @@ const createService = async (req, res) => {
             features: JSON.parse(features), 
             more_info: JSON.parse(more_info), 
             mode: JSON.parse(mode), 
-            bestseller: bestseller === "true" ? true : false
+            bestseller: bestseller === "true" ? true : false,
+            userEmail
         }
 
         console.log(serviceObject);
@@ -59,6 +60,17 @@ const getAllServices = async (req, res) => {
     }
 }
 
+// Get all Services by user email
+const getAllServicesByUserEmail = async (req, res) => {
+    try {
+        const services = await Service.find({}).where({userEmail: req.body.userEmail});
+        res.status(200).json({status: "successful", services})
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({status: "unsuccessful", message: error.message});
+    }
+}
+
 // Get service by ID
 const getServiceById = async (req, res) => {
     try {
@@ -77,7 +89,7 @@ const getServiceById = async (req, res) => {
 // Update service by ID
 const updateServiceById = async (req, res) => {
     try {
-        const {id, name, description, price, category, subCategory, companyScale, rating, terms, features, more_info, mode, bestseller} = req.body;
+        const {id, name, description, price, category, subCategory, companyScale, rating, terms, features, more_info, mode, bestseller, userEmail} = req.body;
         const date = new Date().getTime();
         const image1 = req.files.image1 && req.files.image1[0];
         const image2 = req.files.image2 && req.files.image2[0];
@@ -107,7 +119,8 @@ const updateServiceById = async (req, res) => {
             features: JSON.parse(features), 
             more_info: JSON.parse(more_info), 
             mode: JSON.parse(mode), 
-            bestseller: bestseller === "true" ? true : false
+            bestseller: bestseller === "true" ? true : false,
+            userEmail
         }
 
         console.log(serviceObject);
@@ -133,4 +146,4 @@ const deleteServiceById = async (req, res) => {
     }
 }
 
-export { createService, getAllServices, getServiceById, updateServiceById, deleteServiceById };
+export { createService, getAllServices, getAllServicesByUserEmail, getServiceById, updateServiceById, deleteServiceById };

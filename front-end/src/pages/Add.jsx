@@ -1,7 +1,36 @@
-import React from "react";
+import React, { useState } from "react";
 import { assets } from "../assets/assets";
 
-const Add = ({ sellerToken }) => {
+const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
+
+    const [productName, setProductName] = useState("");
+    const [productDescription, setProductDescription] = useState("");
+    const [colors, setColors] = useState([]);
+    const [features1, setFeatures1] = useState("");
+    const [features2, setFeatures2] = useState("");
+    const [features3, setFeatures3] = useState("");
+    const [features4, setFeatures4] = useState("");
+    const [features5, setFeatures5] = useState("");
+    const [features6, setFeatures6] = useState("");
+    const [additionalInformation1, setAdditionalInformation1] = useState("");
+    const [additionalInformation2, setAdditionalInformation2] = useState("");
+    const [additionalInformation3, setAdditionalInformation3] = useState("");
+    const [additionalInformation4, setAdditionalInformation4] = useState("");
+    const [additionalInformation5, setAdditionalInformation5] = useState("");
+    const [additionalInformation6, setAdditionalInformation6] = useState("");
+    const [terms1, setTerms1] = useState("");
+    const [terms2, setTerms2] = useState("");
+    const [terms3, setTerms3] = useState("");
+    const [terms4, setTerms4] = useState("");
+    const [productCategory, setProductCategory] = useState("Electronics");
+    const [productSubCategory, setProductSubCategory] = useState("Accessories");
+    const [productPrice, setProductPrice] = useState("00");
+const [image1, setImage1] = useState(false);
+const [image2, setImage2] = useState(false);
+const [image3, setImage3] = useState(false);
+const [image4, setImage4] = useState(false);
+const [bestsller, setBestseller] = useState(false);
+
   return (
     <form className="flex flex-col items-start gap-4 w-full text-[14px] font-medium">
       <div className="w-full">
@@ -237,7 +266,7 @@ const Add = ({ sellerToken }) => {
                 src={assets.attach_icon}
                 alt=""
               />
-              <input type="file" id="image1" hidden />
+              <input type="file" id="image1" hidden required/>
             </label>
 
             <label htmlFor="image2">

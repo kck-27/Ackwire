@@ -23,12 +23,15 @@ export const backendURL = import.meta.env.VITE_BACKEND_URL;
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem("token")?localStorage.getItem("token"):"");
   const [sellertoken, setSellertoken] = useState(localStorage.getItem("sellertoken")?localStorage.getItem("sellertoken"):"");
-
+  const [userEmail, setUserEmail] = useState(localStorage.getItem("userEmail")?localStorage.getItem("userEmail"):"");
+  const [userBusinessScale, setUserBusinessScale] = useState(localStorage.getItem("userBusinessScale")?localStorage.getItem("userBusinessScale"):"");
 
   useEffect(() => {
     localStorage.setItem("token", token);
     localStorage.setItem("sellertoken", sellertoken);
-  }, [token, sellertoken]);
+    localStorage.setItem("userEmail", userEmail);
+    localStorage.setItem("userBusinessScale", userBusinessScale);
+  }, [token, sellertoken, userEmail, userBusinessScale]);
 
   return (
     <div className="px-4 sm:px-[5vw] md:px-[7vw] lg:px-[9vw] flex flex-col min-h-screen">
@@ -46,7 +49,7 @@ const App = () => {
       />
 
       {token === "" ? (
-        <SignIn setToken={setToken} setSellertoken={setSellertoken} />
+        <SignIn setToken={setToken} setSellertoken={setSellertoken} setUserEmail={setUserEmail} setUserBusinessScale={setUserBusinessScale}/>
       ) : (
         <div>
           <NavBar sellerToken={sellertoken} setToken={setToken} setSellertoken={setSellertoken}/>
@@ -67,7 +70,7 @@ const App = () => {
               <Route path="/services" element={<Services />} />
               <Route path="/service/:serviceId" element={<Service />} />
               <Route path="/checkout" element={<Checkout />} />
-              <Route path="/sell/*" element={<Sell sellerToken={sellertoken} />} />
+              <Route path="/sell/*" element={<Sell sellerToken={sellertoken} userEmail={userEmail} userBusinessScale={userBusinessScale}/>} />
             </Routes>
           </div>
 
