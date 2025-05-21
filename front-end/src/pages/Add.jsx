@@ -154,7 +154,7 @@ const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
 
       <div>
         <p className="mb-3">Available Colors: </p>
-        <div className="flex gap-4">
+        <div className="grid sm:flex gap-4">
           <div
             onClick={() =>
               setColors((previous) =>
