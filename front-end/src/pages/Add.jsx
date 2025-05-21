@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { assets } from "../assets/assets";
 import axios from "axios";
 import { backendURL } from "../App";
 import { toast } from "react-toastify";
 
 const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
-  const [productName, setProductName] = useState("");
-  const [productDescription, setProductDescription] = useState("");
+  const [currentState, setCurrentState] = useState("product");
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
   const [colors, setColors] = useState([]);
+  const [modes, setModes] = useState([]);
   const [features1, setFeatures1] = useState("");
   const [features2, setFeatures2] = useState("");
   const [features3, setFeatures3] = useState("");
@@ -24,9 +26,9 @@ const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
   const [terms2, setTerms2] = useState("");
   const [terms3, setTerms3] = useState("");
   const [terms4, setTerms4] = useState("");
-  const [productCategory, setProductCategory] = useState("Electronics");
-  const [productSubCategory, setProductSubCategory] = useState("Accessories");
-  const [productPrice, setProductPrice] = useState("");
+  const [category, setCategory] = useState("Electronics");
+  const [subCategory, setSubCategory] = useState("Accessories");
+  const [price, setPrice] = useState("");
   const [image1, setImage1] = useState(false);
   const [image2, setImage2] = useState(false);
   const [image3, setImage3] = useState(false);
@@ -62,11 +64,11 @@ const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
       );
 
       const formdata = new FormData();
-      formdata.append("name", productName);
-      formdata.append("description", productDescription);
-      formdata.append("price", productPrice);
-      formdata.append("category", productCategory);
-      formdata.append("subCategory", productSubCategory);
+      formdata.append("name", name);
+      formdata.append("description", description);
+      formdata.append("price", price);
+      formdata.append("category", category);
+      formdata.append("subCategory", subCategory);
       formdata.append("companyScale", userBusinessScale);
       formdata.append("rating", 75);
       formdata.append("terms", JSON.stringify(terms));
@@ -87,8 +89,8 @@ const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
       );
       if (res.data.status === "successful") {
         toast.success("The product has been published!");
-        setProductName("");
-        setProductDescription("");
+        setName("");
+        setDescription("");
         setColors([]);
         setFeatures1("");
         setFeatures2("");
@@ -106,9 +108,9 @@ const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
         setTerms2("");
         setTerms3("");
         setTerms4("");
-        setProductCategory("Electronics");
-        setProductSubCategory("Accessories");
-        setProductPrice("");
+        setCategory("Electronics");
+        setSubCategory("Accessories");
+        setPrice("");
         setImage1(false);
         setImage2(false);
         setImage3(false);
@@ -129,212 +131,288 @@ const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
       className="flex flex-col items-start gap-4 w-full text-[14px] font-medium"
     >
       <div className="w-full">
-        <p className="mb-3">Product Name: </p>
+        <p className="mb-3">Product or Service? </p>
+        <select
+          onChange={(e) => setCurrentState(e.target.value)}
+          value={currentState}
+          name="currentState"
+          className=" px-3 py-2 border border-gray-300 rounded-xl"
+          required
+        >
+          <option value="" disabled hidden>
+            Publish a Product or a Service?
+          </option>
+          <option value="product">Product</option>
+          <option value="service">Service</option>
+        </select>
+      </div>
+
+      <div className="w-full">
+        {currentState === "product" ? (
+          <p className="mb-3">Product Name: </p>
+        ) : (
+          <p className="mb-3">Service Name: </p>
+        )}
+
         <input
-          onChange={(e) => setProductName(e.target.value)}
-          value={productName}
+          onChange={(e) => setName(e.target.value)}
+          value={name}
           className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
           type="text"
-          placeholder="Enter product name"
+          placeholder={`Enter ${currentState} name`}
           required
         />
       </div>
 
       <div className="w-full">
-        <p className="mb-3">Product Description: </p>
+        {currentState === "product" ? (
+          <p className="mb-3">Product Description: </p>
+        ) : (
+          <p className="mb-3">Service Description: </p>
+        )}
+
         <textarea
-          onChange={(e) => setProductDescription(e.target.value)}
-          value={productDescription}
+          onChange={(e) => setDescription(e.target.value)}
+          value={description}
           className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
           type="text"
-          placeholder="Describe your product briefly"
+          placeholder={`Describe your ${currentState} briefly`}
           required
         />
       </div>
 
       <div>
-        <p className="mb-3">Available Colors: </p>
-        <div className="grid sm:flex gap-4">
-          <div
-            onClick={() =>
-              setColors((previous) =>
-                previous.includes("Black")
-                  ? previous.filter((color) => color !== "Black")
-                  : [...previous, "Black"]
-              )
-            }
-          >
-            <p
-              className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
-                colors.includes("Black")
-                  ? "border-gray-400"
-                  : "border-transparent"
-              }`}
-            >
-              Black
-            </p>
-          </div>
+        {currentState === "product" ? (
+          <p className="mb-3">Available Colors: </p>
+        ) : (
+          <p className="mb-3">Available Modes: </p>
+        )}
 
-          <div
-            onClick={() =>
-              setColors((previous) =>
-                previous.includes("White")
-                  ? previous.filter((color) => color !== "White")
-                  : [...previous, "White"]
-              )
-            }
-          >
-            <p
-              className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
-                colors.includes("White")
-                  ? "border-gray-400"
-                  : "border-transparent"
-              }`}
+        {currentState === "product" ? (
+          <div className="grid sm:flex gap-4">
+            <div
+              onClick={() =>
+                setColors((previous) =>
+                  previous.includes("Black")
+                    ? previous.filter((color) => color !== "Black")
+                    : [...previous, "Black"]
+                )
+              }
             >
-              White
-            </p>
-          </div>
+              <p
+                className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
+                  colors.includes("Black")
+                    ? "border-gray-400"
+                    : "border-transparent"
+                }`}
+              >
+                Black
+              </p>
+            </div>
 
-          <div
-            onClick={() =>
-              setColors((previous) =>
-                previous.includes("Gray")
-                  ? previous.filter((color) => color !== "Gray")
-                  : [...previous, "Gray"]
-              )
-            }
-          >
-            <p
-              className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
-                colors.includes("Gray")
-                  ? "border-gray-400"
-                  : "border-transparent"
-              }`}
+            <div
+              onClick={() =>
+                setColors((previous) =>
+                  previous.includes("White")
+                    ? previous.filter((color) => color !== "White")
+                    : [...previous, "White"]
+                )
+              }
             >
-              Gray
-            </p>
-          </div>
+              <p
+                className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
+                  colors.includes("White")
+                    ? "border-gray-400"
+                    : "border-transparent"
+                }`}
+              >
+                White
+              </p>
+            </div>
 
-          <div
-            onClick={() =>
-              setColors((previous) =>
-                previous.includes("Red")
-                  ? previous.filter((color) => color !== "Red")
-                  : [...previous, "Red"]
-              )
-            }
-          >
-            <p
-              className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
-                colors.includes("Red")
-                  ? "border-gray-400"
-                  : "border-transparent"
-              }`}
+            <div
+              onClick={() =>
+                setColors((previous) =>
+                  previous.includes("Gray")
+                    ? previous.filter((color) => color !== "Gray")
+                    : [...previous, "Gray"]
+                )
+              }
             >
-              Red
-            </p>
-          </div>
+              <p
+                className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
+                  colors.includes("Gray")
+                    ? "border-gray-400"
+                    : "border-transparent"
+                }`}
+              >
+                Gray
+              </p>
+            </div>
 
-          <div
-            onClick={() =>
-              setColors((previous) =>
-                previous.includes("Blue")
-                  ? previous.filter((color) => color !== "Blue")
-                  : [...previous, "Blue"]
-              )
-            }
-          >
-            <p
-              className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
-                colors.includes("Blue")
-                  ? "border-gray-400"
-                  : "border-transparent"
-              }`}
+            <div
+              onClick={() =>
+                setColors((previous) =>
+                  previous.includes("Red")
+                    ? previous.filter((color) => color !== "Red")
+                    : [...previous, "Red"]
+                )
+              }
             >
-              Blue
-            </p>
-          </div>
+              <p
+                className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
+                  colors.includes("Red")
+                    ? "border-gray-400"
+                    : "border-transparent"
+                }`}
+              >
+                Red
+              </p>
+            </div>
 
-          <div
-            onClick={() =>
-              setColors((previous) =>
-                previous.includes("Green")
-                  ? previous.filter((color) => color !== "Green")
-                  : [...previous, "Green"]
-              )
-            }
-          >
-            <p
-              className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
-                colors.includes("Green")
-                  ? "border-gray-400"
-                  : "border-transparent"
-              }`}
+            <div
+              onClick={() =>
+                setColors((previous) =>
+                  previous.includes("Blue")
+                    ? previous.filter((color) => color !== "Blue")
+                    : [...previous, "Blue"]
+                )
+              }
             >
-              Green
-            </p>
-          </div>
+              <p
+                className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
+                  colors.includes("Blue")
+                    ? "border-gray-400"
+                    : "border-transparent"
+                }`}
+              >
+                Blue
+              </p>
+            </div>
 
-          <div
-            onClick={() =>
-              setColors((previous) =>
-                previous.includes("Yellow")
-                  ? previous.filter((color) => color !== "Yellow")
-                  : [...previous, "Yellow"]
-              )
-            }
-          >
-            <p
-              className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
-                colors.includes("Yellow")
-                  ? "border-gray-400"
-                  : "border-transparent"
-              }`}
+            <div
+              onClick={() =>
+                setColors((previous) =>
+                  previous.includes("Green")
+                    ? previous.filter((color) => color !== "Green")
+                    : [...previous, "Green"]
+                )
+              }
             >
-              Yellow
-            </p>
-          </div>
+              <p
+                className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
+                  colors.includes("Green")
+                    ? "border-gray-400"
+                    : "border-transparent"
+                }`}
+              >
+                Green
+              </p>
+            </div>
 
-          <div
-            onClick={() =>
-              setColors((previous) =>
-                previous.includes("Pink")
-                  ? previous.filter((color) => color !== "Pink")
-                  : [...previous, "Pink"]
-              )
-            }
-          >
-            <p
-              className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
-                colors.includes("Pink")
-                  ? "border-gray-400"
-                  : "border-transparent"
-              }`}
+            <div
+              onClick={() =>
+                setColors((previous) =>
+                  previous.includes("Yellow")
+                    ? previous.filter((color) => color !== "Yellow")
+                    : [...previous, "Yellow"]
+                )
+              }
             >
-              Pink
-            </p>
-          </div>
+              <p
+                className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
+                  colors.includes("Yellow")
+                    ? "border-gray-400"
+                    : "border-transparent"
+                }`}
+              >
+                Yellow
+              </p>
+            </div>
 
-          <div
-            onClick={() =>
-              setColors((previous) =>
-                previous.includes("Orange")
-                  ? previous.filter((color) => color !== "Orange")
-                  : [...previous, "Orange"]
-              )
-            }
-          >
-            <p
-              className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
-                colors.includes("Orange")
-                  ? "border-gray-400"
-                  : "border-transparent"
-              }`}
+            <div
+              onClick={() =>
+                setColors((previous) =>
+                  previous.includes("Pink")
+                    ? previous.filter((color) => color !== "Pink")
+                    : [...previous, "Pink"]
+                )
+              }
             >
-              Orange
-            </p>
+              <p
+                className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
+                  colors.includes("Pink")
+                    ? "border-gray-400"
+                    : "border-transparent"
+                }`}
+              >
+                Pink
+              </p>
+            </div>
+
+            <div
+              onClick={() =>
+                setColors((previous) =>
+                  previous.includes("Orange")
+                    ? previous.filter((color) => color !== "Orange")
+                    : [...previous, "Orange"]
+                )
+              }
+            >
+              <p
+                className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
+                  colors.includes("Orange")
+                    ? "border-gray-400"
+                    : "border-transparent"
+                }`}
+              >
+                Orange
+              </p>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="grid sm:flex gap-4">
+            <div
+              onClick={() =>
+                setModes((previous) =>
+                  previous.includes("Remote")
+                    ? previous.filter((mode) => mode !== "Remote")
+                    : [...previous, "Remote"]
+                )
+              }
+            >
+              <p
+                className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
+                  modes.includes("Remote")
+                    ? "border-gray-400"
+                    : "border-transparent"
+                }`}
+              >
+                Remote
+              </p>
+            </div>
+
+            <div
+              onClick={() =>
+                setModes((previous) =>
+                  previous.includes("Physical")
+                    ? previous.filter((mode) => mode !== "Physical")
+                    : [...previous, "Physical"]
+                )
+              }
+            >
+              <p
+                className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
+                  modes.includes("Physical")
+                    ? "border-gray-400"
+                    : "border-transparent"
+                }`}
+              >
+                Physical
+              </p>
+            </div>
+          </div>
+        )}
       </div>
 
       <div className="w-full">
@@ -477,53 +555,120 @@ const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
 
       <div className="flex flex-col sm:flex-row w-full gap-2 sm:gap-6">
         <div className="w-full">
-          <p className="mb-3">Product Category: </p>
-          <select
-            onChange={(e) => setProductCategory(e.target.value)}
-            className="rounded border border-gray-300"
-          >
-            <option value="Electronics">Electronics</option>
-            <option value="Home Appliances">Home Appliances</option>
-            <option value="Sports">Sports</option>
-            <option value="Beauty">Beauty</option>
-            <option value="Fashion">Fashion</option>
-            <option value="Accessories">Accessories</option>
-          </select>
+          {currentState === "product" ? (
+            <p className="mb-3">Product Category: </p>
+          ) : (
+            <p className="mb-3">Service Category: </p>
+          )}
+
+          {currentState === "product" ? (
+            <select
+              onChange={(e) => setCategory(e.target.value)}
+              className="rounded border border-gray-300"
+            >
+              <option value="Electronics">Electronics</option>
+              <option value="Home Appliances">Home Appliances</option>
+              <option value="Sports">Sports</option>
+              <option value="Beauty">Beauty</option>
+              <option value="Fashion">Fashion</option>
+              <option value="Accessories">Accessories</option>
+            </select>
+          ) : (
+            <select
+              onChange={(e) => setCategory(e.target.value)}
+              className="rounded border border-gray-300"
+            >
+              <option value="Administrative Services">
+                Administrative Services
+              </option>
+              <option value="Cleaning Services">Cleaning Services</option>
+              <option value="IT Services">IT Services</option>
+              <option value="Training & Education">Training & Education</option>
+              <option value="Consulting Services">Consulting Services</option>
+              <option value="Financial Services">Financial Services</option>
+              <option value="Legal Services">Legal Services</option>
+              <option value="Professional Services">
+                Professional Services
+              </option>
+              <option value="Fitness Services">Fitness Services</option>
+              <option value="Event Services">Event Services</option>
+              <option value="Design Services">Design Services</option>
+              <option value="Photography Services">Photography Services</option>
+              <option value="Marketing Services">Marketing Services</option>
+              <option value="Home Services">Home Services</option>
+            </select>
+          )}
         </div>
 
         <div className="w-full">
-          <p className="mb-3">Product Sub-Category: </p>
-          <select
-            onChange={(e) => setProductSubCategory(e.target.value)}
-            className="rounded border border-gray-300"
-          >
-            <option value="Accessories">Accessories</option>
-            <option value="Audio">Audio</option>
-            <option value="Bags">Bags</option>
-            <option value="Bedding">Bedding</option>
-            <option value="Bottles">Bottles</option>
-            <option value="Cleaning">Cleaning</option>
-            <option value="Decor">Decor</option>
-            <option value="Dresses">Dresses</option>
-            <option value="Fitness">Fitness</option>
-            <option value="Footwear">Footwear</option>
-            <option value="Grooming">Grooming</option>
-            <option value="Kitchen">Kitchen</option>
-            <option value="Monitors">Monitors</option>
-            <option value="Security">Security</option>
-            <option value="Sweaters">Sweaters</option>
-            <option value="Tables">Tables</option>
-            <option value="TVs">TVs</option>
-            <option value="Wallets">Wallets</option>
-            <option value="Wearables">Wearables</option>
-          </select>
+          {currentState === "product" ? (
+            <p className="mb-3">Product Sub-Category: </p>
+          ) : (
+            <p className="mb-3">Service Sub-Category: </p>
+          )}
+
+          {currentState === "product" ? (
+            <select
+              onChange={(e) => setSubCategory(e.target.value)}
+              className="rounded border border-gray-300"
+            >
+              <option value="Accessories">Accessories</option>
+              <option value="Audio">Audio</option>
+              <option value="Bags">Bags</option>
+              <option value="Bedding">Bedding</option>
+              <option value="Bottles">Bottles</option>
+              <option value="Cleaning">Cleaning</option>
+              <option value="Decor">Decor</option>
+              <option value="Dresses">Dresses</option>
+              <option value="Fitness">Fitness</option>
+              <option value="Footwear">Footwear</option>
+              <option value="Grooming">Grooming</option>
+              <option value="Kitchen">Kitchen</option>
+              <option value="Monitors">Monitors</option>
+              <option value="Security">Security</option>
+              <option value="Sweaters">Sweaters</option>
+              <option value="Tables">Tables</option>
+              <option value="TVs">TVs</option>
+              <option value="Wallets">Wallets</option>
+              <option value="Wearables">Wearables</option>
+            </select>
+          ) : (
+            <select
+              onChange={(e) => setSubCategory(e.target.value)}
+              className="rounded border border-gray-300"
+            >
+              <option value="App Development">App Development</option>
+              <option value="Branding">Branding</option>
+              <option value="Consulting">Consulting</option>
+              <option value="Corporate Training">Corporate Training</option>
+              <option value="Event Photography">Event Photography</option>
+              <option value="Event Planning">Event Planning</option>
+              <option value="Graphic Design">Graphic Design</option>
+              <option value="Home Cleaning">Home Cleaning</option>
+              <option value="Interior Design">Interior Design</option>
+              <option value="Personal Training">Personal Training</option>
+              <option value="Pest Control">Pest Control</option>
+              <option value="SEO">SEO</option>
+              <option value="Social Media Management">
+                Social Media Management
+              </option>
+              <option value="Tax Services">Tax Services</option>
+              <option value="Translation">Translation</option>
+              <option value="Virtual Assistance">Virtual Assistance</option>
+              <option value="Web Development">Web Development</option>
+            </select>
+          )}
         </div>
 
         <div className="w-full">
-          <p className="mb-3">Product Price: </p>
+          {currentState === "product" ? (
+            <p className="mb-3">Product Price: </p>
+          ) : (
+            <p className="mb-3">Service Price: </p>
+          )}
           <input
-            onChange={(e) => setProductPrice(e.target.value)}
-            value={productPrice}
+            onChange={(e) => setPrice(e.target.value)}
+            value={price}
             type="number"
             placeholder="00"
             className="rounded border border-gray-300"
@@ -594,9 +739,16 @@ const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
         </div>
 
         <div className="flex gap-2 mt-10">
-          <label className="cursor-pointer mt-4" htmlFor="bestseller">
-            Bestseller Product?
-          </label>
+          {currentState === "product" ? (
+            <label className="cursor-pointer mt-4" htmlFor="bestseller">
+              Bestseller Product?
+            </label>
+          ) : (
+            <label className="cursor-pointer mt-4" htmlFor="bestseller">
+              Bestseller Service?
+            </label>
+          )}
+
           <input
             onChange={() => setBestseller((previous) => !previous)}
             checked={bestseller}
