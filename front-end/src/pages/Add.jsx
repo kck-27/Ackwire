@@ -1,41 +1,138 @@
 import React, { useState } from "react";
 import { assets } from "../assets/assets";
+import axios from "axios";
+import { backendURL } from "../App";
+import { toast } from "react-toastify";
 
 const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
+  const [productName, setProductName] = useState("");
+  const [productDescription, setProductDescription] = useState("");
+  const [colors, setColors] = useState([]);
+  const [features1, setFeatures1] = useState("");
+  const [features2, setFeatures2] = useState("");
+  const [features3, setFeatures3] = useState("");
+  const [features4, setFeatures4] = useState("");
+  const [features5, setFeatures5] = useState("");
+  const [features6, setFeatures6] = useState("");
+  const [additionalInformation1, setAdditionalInformation1] = useState("");
+  const [additionalInformation2, setAdditionalInformation2] = useState("");
+  const [additionalInformation3, setAdditionalInformation3] = useState("");
+  const [additionalInformation4, setAdditionalInformation4] = useState("");
+  const [additionalInformation5, setAdditionalInformation5] = useState("");
+  const [additionalInformation6, setAdditionalInformation6] = useState("");
+  const [terms1, setTerms1] = useState("");
+  const [terms2, setTerms2] = useState("");
+  const [terms3, setTerms3] = useState("");
+  const [terms4, setTerms4] = useState("");
+  const [productCategory, setProductCategory] = useState("Electronics");
+  const [productSubCategory, setProductSubCategory] = useState("Accessories");
+  const [productPrice, setProductPrice] = useState("");
+  const [image1, setImage1] = useState(false);
+  const [image2, setImage2] = useState(false);
+  const [image3, setImage3] = useState(false);
+  const [image4, setImage4] = useState(false);
+  const [bestseller, setBestseller] = useState(false);
 
-    const [productName, setProductName] = useState("");
-    const [productDescription, setProductDescription] = useState("");
-    const [colors, setColors] = useState([]);
-    const [features1, setFeatures1] = useState("");
-    const [features2, setFeatures2] = useState("");
-    const [features3, setFeatures3] = useState("");
-    const [features4, setFeatures4] = useState("");
-    const [features5, setFeatures5] = useState("");
-    const [features6, setFeatures6] = useState("");
-    const [additionalInformation1, setAdditionalInformation1] = useState("");
-    const [additionalInformation2, setAdditionalInformation2] = useState("");
-    const [additionalInformation3, setAdditionalInformation3] = useState("");
-    const [additionalInformation4, setAdditionalInformation4] = useState("");
-    const [additionalInformation5, setAdditionalInformation5] = useState("");
-    const [additionalInformation6, setAdditionalInformation6] = useState("");
-    const [terms1, setTerms1] = useState("");
-    const [terms2, setTerms2] = useState("");
-    const [terms3, setTerms3] = useState("");
-    const [terms4, setTerms4] = useState("");
-    const [productCategory, setProductCategory] = useState("Electronics");
-    const [productSubCategory, setProductSubCategory] = useState("Accessories");
-    const [productPrice, setProductPrice] = useState("00");
-const [image1, setImage1] = useState(false);
-const [image2, setImage2] = useState(false);
-const [image3, setImage3] = useState(false);
-const [image4, setImage4] = useState(false);
-const [bestsller, setBestseller] = useState(false);
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!image1) {
+      alert("Please attach at least one image.");
+      return;
+    }
+
+    try {
+      const features = [
+        features1,
+        features2,
+        features3,
+        features4,
+        features5,
+        features6,
+      ].filter((f) => f.trim() !== "");
+      const additionalInformation = [
+        additionalInformation1,
+        additionalInformation2,
+        additionalInformation3,
+        additionalInformation4,
+        additionalInformation5,
+        additionalInformation6,
+      ].filter((a) => a.trim() !== "");
+      const terms = [terms1, terms2, terms3, terms4].filter(
+        (t) => t.trim() !== ""
+      );
+
+      const formdata = new FormData();
+      formdata.append("name", productName);
+      formdata.append("description", productDescription);
+      formdata.append("price", productPrice);
+      formdata.append("category", productCategory);
+      formdata.append("subCategory", productSubCategory);
+      formdata.append("companyScale", userBusinessScale);
+      formdata.append("rating", 75);
+      formdata.append("terms", JSON.stringify(terms));
+      formdata.append("features", JSON.stringify(features));
+      formdata.append("more_info", JSON.stringify(additionalInformation));
+      formdata.append("color", JSON.stringify(colors));
+      formdata.append("bestseller", bestseller);
+      image1 && formdata.append("image1", image1);
+      image2 && formdata.append("image2", image2);
+      image3 && formdata.append("image3", image3);
+      image4 && formdata.append("image4", image4);
+      formdata.append("userEmail", userEmail);
+
+      const res = await axios.post(
+        `${backendURL}/api/products/create`,
+        formdata,
+        { headers: { sellerToken } }
+      );
+      if (res.data.status === "successful") {
+        toast.success("The product has been published!");
+        setProductName("");
+        setProductDescription("");
+        setColors([]);
+        setFeatures1("");
+        setFeatures2("");
+        setFeatures3("");
+        setFeatures4("");
+        setFeatures5("");
+        setFeatures6("");
+        setAdditionalInformation1("");
+        setAdditionalInformation2("");
+        setAdditionalInformation3("");
+        setAdditionalInformation4("");
+        setAdditionalInformation5("");
+        setAdditionalInformation6("");
+        setTerms1("");
+        setTerms2("");
+        setTerms3("");
+        setTerms4("");
+        setProductCategory("Electronics");
+        setProductSubCategory("Accessories");
+        setProductPrice("");
+        setImage1(false);
+        setImage2(false);
+        setImage3(false);
+        setImage4(false);
+        setBestseller(false);
+      } else {
+        toast.error(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.message || error.message);
+    }
+  };
 
   return (
-    <form className="flex flex-col items-start gap-4 w-full text-[14px] font-medium">
+    <form
+      onSubmit={handleSubmit}
+      className="flex flex-col items-start gap-4 w-full text-[14px] font-medium"
+    >
       <div className="w-full">
         <p className="mb-3">Product Name: </p>
         <input
+          onChange={(e) => setProductName(e.target.value)}
+          value={productName}
           className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
           type="text"
           placeholder="Enter product name"
@@ -46,6 +143,8 @@ const [bestsller, setBestseller] = useState(false);
       <div className="w-full">
         <p className="mb-3">Product Description: </p>
         <textarea
+          onChange={(e) => setProductDescription(e.target.value)}
+          value={productDescription}
           className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
           type="text"
           placeholder="Describe your product briefly"
@@ -56,40 +155,184 @@ const [bestsller, setBestseller] = useState(false);
       <div>
         <p className="mb-3">Available Colors: </p>
         <div className="flex gap-4">
-          <div>
-            <p className="bg-gray-200 py-2 px-4 cursor-pointer">Black</p>
+          <div
+            onClick={() =>
+              setColors((previous) =>
+                previous.includes("Black")
+                  ? previous.filter((color) => color !== "Black")
+                  : [...previous, "Black"]
+              )
+            }
+          >
+            <p
+              className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
+                colors.includes("Black")
+                  ? "border-gray-400"
+                  : "border-transparent"
+              }`}
+            >
+              Black
+            </p>
           </div>
 
-          <div>
-            <p className="bg-gray-200 py-2 px-4 cursor-pointer">White</p>
+          <div
+            onClick={() =>
+              setColors((previous) =>
+                previous.includes("White")
+                  ? previous.filter((color) => color !== "White")
+                  : [...previous, "White"]
+              )
+            }
+          >
+            <p
+              className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
+                colors.includes("White")
+                  ? "border-gray-400"
+                  : "border-transparent"
+              }`}
+            >
+              White
+            </p>
           </div>
 
-          <div>
-            <p className="bg-gray-200 py-2 px-4 cursor-pointer">Gray</p>
+          <div
+            onClick={() =>
+              setColors((previous) =>
+                previous.includes("Gray")
+                  ? previous.filter((color) => color !== "Gray")
+                  : [...previous, "Gray"]
+              )
+            }
+          >
+            <p
+              className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
+                colors.includes("Gray")
+                  ? "border-gray-400"
+                  : "border-transparent"
+              }`}
+            >
+              Gray
+            </p>
           </div>
 
-          <div>
-            <p className="bg-gray-200 py-2 px-4 cursor-pointer">Red</p>
+          <div
+            onClick={() =>
+              setColors((previous) =>
+                previous.includes("Red")
+                  ? previous.filter((color) => color !== "Red")
+                  : [...previous, "Red"]
+              )
+            }
+          >
+            <p
+              className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
+                colors.includes("Red")
+                  ? "border-gray-400"
+                  : "border-transparent"
+              }`}
+            >
+              Red
+            </p>
           </div>
 
-          <div>
-            <p className="bg-gray-200 py-2 px-4 cursor-pointer">Blue</p>
+          <div
+            onClick={() =>
+              setColors((previous) =>
+                previous.includes("Blue")
+                  ? previous.filter((color) => color !== "Blue")
+                  : [...previous, "Blue"]
+              )
+            }
+          >
+            <p
+              className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
+                colors.includes("Blue")
+                  ? "border-gray-400"
+                  : "border-transparent"
+              }`}
+            >
+              Blue
+            </p>
           </div>
 
-          <div>
-            <p className="bg-gray-200 py-2 px-4 cursor-pointer">Green</p>
+          <div
+            onClick={() =>
+              setColors((previous) =>
+                previous.includes("Green")
+                  ? previous.filter((color) => color !== "Green")
+                  : [...previous, "Green"]
+              )
+            }
+          >
+            <p
+              className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
+                colors.includes("Green")
+                  ? "border-gray-400"
+                  : "border-transparent"
+              }`}
+            >
+              Green
+            </p>
           </div>
 
-          <div>
-            <p className="bg-gray-200 py-2 px-4 cursor-pointer">Yellow</p>
+          <div
+            onClick={() =>
+              setColors((previous) =>
+                previous.includes("Yellow")
+                  ? previous.filter((color) => color !== "Yellow")
+                  : [...previous, "Yellow"]
+              )
+            }
+          >
+            <p
+              className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
+                colors.includes("Yellow")
+                  ? "border-gray-400"
+                  : "border-transparent"
+              }`}
+            >
+              Yellow
+            </p>
           </div>
 
-          <div>
-            <p className="bg-gray-200 py-2 px-4 cursor-pointer">Pink</p>
+          <div
+            onClick={() =>
+              setColors((previous) =>
+                previous.includes("Pink")
+                  ? previous.filter((color) => color !== "Pink")
+                  : [...previous, "Pink"]
+              )
+            }
+          >
+            <p
+              className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
+                colors.includes("Pink")
+                  ? "border-gray-400"
+                  : "border-transparent"
+              }`}
+            >
+              Pink
+            </p>
           </div>
 
-          <div>
-            <p className="bg-gray-200 py-2 px-4 cursor-pointer">Orange</p>
+          <div
+            onClick={() =>
+              setColors((previous) =>
+                previous.includes("Orange")
+                  ? previous.filter((color) => color !== "Orange")
+                  : [...previous, "Orange"]
+              )
+            }
+          >
+            <p
+              className={`bg-gray-200 py-2 px-4 border cursor-pointer ${
+                colors.includes("Orange")
+                  ? "border-gray-400"
+                  : "border-transparent"
+              }`}
+            >
+              Orange
+            </p>
           </div>
         </div>
       </div>
@@ -98,40 +341,49 @@ const [bestsller, setBestseller] = useState(false);
         <p className="mb-3">Features: </p>
         <div className="flex flex-col gap-2">
           <input
+            onChange={(e) => setFeatures1(e.target.value)}
+            value={features1}
             className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
             type="text"
             placeholder="1:"
             required
           />
           <input
+            onChange={(e) => setFeatures2(e.target.value)}
+            value={features2}
             className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
             type="text"
             placeholder="2:"
             required
           />
           <input
+            onChange={(e) => setFeatures3(e.target.value)}
+            value={features3}
             className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
             type="text"
             placeholder="3:"
             required
           />
           <input
+            onChange={(e) => setFeatures4(e.target.value)}
+            value={features4}
             className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
             type="text"
             placeholder="4:"
-            
           />
           <input
+            onChange={(e) => setFeatures5(e.target.value)}
+            value={features5}
             className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
             type="text"
             placeholder="5:"
-            
           />
           <input
+            onChange={(e) => setFeatures6(e.target.value)}
+            value={features6}
             className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
             type="text"
             placeholder="6:"
-            
           />
         </div>
       </div>
@@ -140,40 +392,49 @@ const [bestsller, setBestseller] = useState(false);
         <p className="mb-3">Additional Information: </p>
         <div className="flex flex-col gap-2">
           <input
+            onChange={(e) => setAdditionalInformation1(e.target.value)}
+            value={additionalInformation1}
             className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
             type="text"
             placeholder="1:"
             required
           />
           <input
+            onChange={(e) => setAdditionalInformation2(e.target.value)}
+            value={additionalInformation2}
             className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
             type="text"
             placeholder="2:"
             required
           />
           <input
+            onChange={(e) => setAdditionalInformation3(e.target.value)}
+            value={additionalInformation3}
             className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
             type="text"
             placeholder="3:"
             required
           />
           <input
+            onChange={(e) => setAdditionalInformation4(e.target.value)}
+            value={additionalInformation4}
             className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
             type="text"
             placeholder="4:"
-            
           />
           <input
+            onChange={(e) => setAdditionalInformation5(e.target.value)}
+            value={additionalInformation5}
             className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
             type="text"
             placeholder="5:"
-            
           />
           <input
+            onChange={(e) => setAdditionalInformation6(e.target.value)}
+            value={additionalInformation6}
             className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
             type="text"
             placeholder="6:"
-            
           />
         </div>
       </div>
@@ -182,28 +443,34 @@ const [bestsller, setBestseller] = useState(false);
         <p className="mb-3">Terms and Conditions: </p>
         <div className="flex flex-col gap-2">
           <input
+            onChange={(e) => setTerms1(e.target.value)}
+            value={terms1}
             className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
             type="text"
             placeholder="1:"
             required
           />
           <input
+            onChange={(e) => setTerms2(e.target.value)}
+            value={terms2}
             className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
             type="text"
             placeholder="2:"
             required
           />
           <input
+            onChange={(e) => setTerms3(e.target.value)}
+            value={terms3}
             className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
             type="text"
             placeholder="3:"
-            
           />
           <input
+            onChange={(e) => setTerms4(e.target.value)}
+            value={terms4}
             className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
             type="text"
             placeholder="4:"
-            
           />
         </div>
       </div>
@@ -211,7 +478,10 @@ const [bestsller, setBestseller] = useState(false);
       <div className="flex flex-col sm:flex-row w-full gap-2 sm:gap-6">
         <div className="w-full">
           <p className="mb-3">Product Category: </p>
-          <select className="rounded border border-gray-300">
+          <select
+            onChange={(e) => setProductCategory(e.target.value)}
+            className="rounded border border-gray-300"
+          >
             <option value="Electronics">Electronics</option>
             <option value="Home Appliances">Home Appliances</option>
             <option value="Sports">Sports</option>
@@ -223,7 +493,10 @@ const [bestsller, setBestseller] = useState(false);
 
         <div className="w-full">
           <p className="mb-3">Product Sub-Category: </p>
-          <select className="rounded border border-gray-300">
+          <select
+            onChange={(e) => setProductSubCategory(e.target.value)}
+            className="rounded border border-gray-300"
+          >
             <option value="Accessories">Accessories</option>
             <option value="Audio">Audio</option>
             <option value="Bags">Bags</option>
@@ -249,6 +522,8 @@ const [bestsller, setBestseller] = useState(false);
         <div className="w-full">
           <p className="mb-3">Product Price: </p>
           <input
+            onChange={(e) => setProductPrice(e.target.value)}
+            value={productPrice}
             type="number"
             placeholder="00"
             className="rounded border border-gray-300"
@@ -263,37 +538,57 @@ const [bestsller, setBestseller] = useState(false);
             <label htmlFor="image1">
               <img
                 className="w-15 border border-gray-300 rounded-lg p-2 cursor-pointer"
-                src={assets.attach_icon}
+                src={image1 ? URL.createObjectURL(image1) : assets.attach_icon}
                 alt=""
               />
-              <input type="file" id="image1" hidden required/>
+              <input
+                onChange={(e) => setImage1(e.target.files[0])}
+                type="file"
+                id="image1"
+                hidden
+              />
             </label>
 
             <label htmlFor="image2">
               <img
                 className="w-15 border border-gray-300 rounded-lg p-2 cursor-pointer"
-                src={assets.attach_icon}
+                src={image2 ? URL.createObjectURL(image2) : assets.attach_icon}
                 alt=""
               />
-              <input type="file" id="image2" hidden />
+              <input
+                onChange={(e) => setImage2(e.target.files[0])}
+                type="file"
+                id="image2"
+                hidden
+              />
             </label>
 
             <label htmlFor="image3">
               <img
                 className="w-15 border border-gray-300 rounded-lg p-2 cursor-pointer"
-                src={assets.attach_icon}
+                src={image3 ? URL.createObjectURL(image3) : assets.attach_icon}
                 alt=""
               />
-              <input type="file" id="image3" hidden />
+              <input
+                onChange={(e) => setImage3(e.target.files[0])}
+                type="file"
+                id="image3"
+                hidden
+              />
             </label>
 
             <label htmlFor="image4">
               <img
                 className="w-15 border border-gray-300 rounded-lg p-2 cursor-pointer"
-                src={assets.attach_icon}
+                src={image4 ? URL.createObjectURL(image4) : assets.attach_icon}
                 alt=""
               />
-              <input type="file" id="image4" hidden />
+              <input
+                onChange={(e) => setImage4(e.target.files[0])}
+                type="file"
+                id="image4"
+                hidden
+              />
             </label>
           </div>
         </div>
@@ -302,7 +597,12 @@ const [bestsller, setBestseller] = useState(false);
           <label className="cursor-pointer mt-4" htmlFor="bestseller">
             Bestseller Product?
           </label>
-          <input type="checkbox" id="bestseller" />
+          <input
+            onChange={() => setBestseller((previous) => !previous)}
+            checked={bestseller}
+            type="checkbox"
+            id="bestseller"
+          />
         </div>
       </div>
 
