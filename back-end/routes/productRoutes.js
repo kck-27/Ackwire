@@ -8,7 +8,7 @@ const productRouter = express.Router();
 
 productRouter.post('/create', sellerAuth, upload.fields([{name: 'image1', maxCount: 1}, {name: 'image2', maxCount: 1}, {name: 'image3', maxCount: 1}, {name: 'image4', maxCount: 1}]), createProduct);
 productRouter.get('/all', getAllProducts);
-productRouter.get('/all-by-email', getAllProductsByUserEmail);
+productRouter.post('/all-by-email', getAllProductsByUserEmail);
 productRouter.post('/get', getProductById);
 productRouter.put('/update', sellerAuth, upload.fields([{name: 'image1', maxCount: 1}, {name: 'image2', maxCount: 1}, {name: 'image3', maxCount: 1}, {name: 'image4', maxCount: 1}]), updateProductById);
 productRouter.post('/delete', sellerAuth, deleteProductById);

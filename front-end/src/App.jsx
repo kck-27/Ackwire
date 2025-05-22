@@ -19,6 +19,7 @@ import { ToastContainer, toast } from "react-toastify";
 import Sell from "./pages/Sell";
 
 export const backendURL = import.meta.env.VITE_BACKEND_URL;
+export const currency = import.meta.env.VITE_CURRENCY;
 
 const App = () => {
   const [token, setToken] = useState(localStorage.getItem("token")?localStorage.getItem("token"):"");
