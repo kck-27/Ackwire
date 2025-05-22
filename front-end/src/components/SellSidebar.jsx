@@ -13,10 +13,10 @@ const SellSidebar = () => {
               isActive ? " sell-sidebar-active" : ""
             }`
           }
-          to={"/sell/add"}
+          to={"/sell/publish"}
         >
           <img className="w-7 h-7 sm:w-9 sm:h-9" src={assets.add_icon} alt="" />
-          <p className="md:block hidden">Add Items</p>
+          <p className="md:block hidden">Publish Items</p>
         </NavLink>
 
         <NavLink

@@ -4,7 +4,7 @@ import axios from "axios";
 import { backendURL } from "../App";
 import { toast } from "react-toastify";
 
-const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
+const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
   const [currentState, setCurrentState] = useState("product");
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -26,8 +26,8 @@ const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
   const [terms2, setTerms2] = useState("");
   const [terms3, setTerms3] = useState("");
   const [terms4, setTerms4] = useState("");
-  const [category, setCategory] = useState("Electronics");
-  const [subCategory, setSubCategory] = useState("Accessories");
+  const [category, setCategory] = useState("");
+  const [subCategory, setSubCategory] = useState("");
   const [price, setPrice] = useState("");
   const [image1, setImage1] = useState(false);
   const [image2, setImage2] = useState(false);
@@ -74,7 +74,12 @@ const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
       formdata.append("terms", JSON.stringify(terms));
       formdata.append("features", JSON.stringify(features));
       formdata.append("more_info", JSON.stringify(additionalInformation));
-      formdata.append("color", JSON.stringify(colors));
+      if (currentState === "product") {
+        formdata.append("color", JSON.stringify(colors));
+      }
+      if (currentState === "service") {
+        formdata.append("mode", JSON.stringify(modes));
+      }
       formdata.append("bestseller", bestseller);
       image1 && formdata.append("image1", image1);
       image2 && formdata.append("image2", image2);
@@ -83,12 +88,12 @@ const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
       formdata.append("userEmail", userEmail);
 
       const res = await axios.post(
-        `${backendURL}/api/products/create`,
+        `${backendURL}/api/${currentState}s/create`,
         formdata,
         { headers: { sellerToken } }
       );
       if (res.data.status === "successful") {
-        toast.success("The product has been published!");
+        toast.success(`The ${currentState} has been published successfully!`);
         setName("");
         setDescription("");
         setColors([]);
@@ -108,8 +113,8 @@ const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
         setTerms2("");
         setTerms3("");
         setTerms4("");
-        setCategory("Electronics");
-        setSubCategory("Accessories");
+        setCategory("");
+        setSubCategory("");
         setPrice("");
         setImage1(false);
         setImage2(false);
@@ -563,9 +568,10 @@ const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
 
           {currentState === "product" ? (
             <select
-              onChange={(e) => setCategory(e.target.value)}
-              className="rounded border border-gray-300"
+              onChange={(e) => setCategory(e.target.value)} value={category}
+              className="rounded border border-gray-300" required
             >
+              <option value="" disabled hidden>Select Category</option>
               <option value="Electronics">Electronics</option>
               <option value="Home Appliances">Home Appliances</option>
               <option value="Sports">Sports</option>
@@ -575,9 +581,10 @@ const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
             </select>
           ) : (
             <select
-              onChange={(e) => setCategory(e.target.value)}
-              className="rounded border border-gray-300"
+              onChange={(e) => setCategory(e.target.value)} value={category}
+              className="rounded border border-gray-300" required
             >
+              <option value="" disabled hidden>Select Category</option>
               <option value="Administrative Services">
                 Administrative Services
               </option>
@@ -609,9 +616,10 @@ const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
 
           {currentState === "product" ? (
             <select
-              onChange={(e) => setSubCategory(e.target.value)}
-              className="rounded border border-gray-300"
+              onChange={(e) => setSubCategory(e.target.value)} value={subCategory}
+              className="rounded border border-gray-300" required
             >
+              <option value="" disabled hidden>Select Sub-Category</option>
               <option value="Accessories">Accessories</option>
               <option value="Audio">Audio</option>
               <option value="Bags">Bags</option>
@@ -634,9 +642,10 @@ const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
             </select>
           ) : (
             <select
-              onChange={(e) => setSubCategory(e.target.value)}
-              className="rounded border border-gray-300"
+              onChange={(e) => setSubCategory(e.target.value)} value={subCategory}
+              className="rounded border border-gray-300" required
             >
+              <option value="" disabled hidden>Select Sub-Category</option>
               <option value="App Development">App Development</option>
               <option value="Branding">Branding</option>
               <option value="Consulting">Consulting</option>
@@ -671,7 +680,7 @@ const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
             value={price}
             type="number"
             placeholder="00"
-            className="rounded border border-gray-300"
+            className="rounded border border-gray-300" required
           />
         </div>
       </div>
@@ -768,4 +777,4 @@ const Add = ({ sellerToken, userEmail, userBusinessScale }) => {
   );
 };
 
-export default Add;
+export default Publish;
