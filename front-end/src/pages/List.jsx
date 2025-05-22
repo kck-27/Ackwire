@@ -103,8 +103,8 @@ const List = ({ sellerToken, userEmail, userBusinessScale }) => {
             className="border border-gray-300 rounded-xl p-4 flex flex-col gap-2 items-center sm:gap-10 sm:flex-row min-w-0 w-full"
           >
             <img src={item.image[0]} alt="" className="sm:w-[10%] rounded-2xl border border-gray-300"/>
-            <p className="sm:w-[15%] break-words text-lg font-medium pl-5">{item.name}</p>
-            <p className="sm:w-[43%] break-words text-lg pl-3">{item.description.slice(0, 40)}</p>
+            <p className="sm:w-[15%] break-words text-lg font-medium sm:pl-5">{item.name}</p>
+            <p className="sm:w-[43%] break-words text-lg sm:pl-3">{item.description.slice(0, 40)}</p>
             <p className="sm:w-[7%] break-words text-lg font-medium">{currency}{item.price}.00</p>
             <div className="sm:w-15 flex flex-row gap-5">
             <img className="w-10 sm:w-[55%] cursor-pointer" src={assets.edit_icon} alt="" />
