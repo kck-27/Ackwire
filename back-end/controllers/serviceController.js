@@ -138,8 +138,11 @@ const updateServiceById = async (req, res) => {
 // Delete service by ID
 const deleteServiceById = async (req, res) => {
     try {
-        await Service.findByIdAndDelete(req.body.id);
-        res.status(200).json({status: "Successful", message: "Service deleted successfully"});
+        const deletedService = await Service.findByIdAndDelete(req.body.id);
+        if (!deletedService) {
+            return res.status(404).json({status: "unsuccessful", message: "Service not found"});
+        }
+        res.status(200).json({status: "successful", message: "Service deleted successfully"});
     } catch(error) {
         console.log(error);
         res.status(500).json({status: "unsuccessful", message: error.message});

@@ -140,8 +140,11 @@ const updateProductById = async (req, res) => {
 // Delete product by ID
 const deleteProductById = async (req, res) => {
     try {
-        await Product.findByIdAndDelete(req.body.id);
-        res.status(200).json({status: "Successful", message: "Product deleted successfully"});
+        const deletedProduct = await Product.findByIdAndDelete(req.body.id);
+        if (!deletedProduct) {
+            return res.status(404).json({status: "unsuccessful", message: "Product not found"});
+        }
+        res.status(200).json({status: "successful", message: "Product deleted successfully"});
     } catch(error) {
         console.log(error);
         res.status(500).json({status: "unsuccessful", message: error.message});

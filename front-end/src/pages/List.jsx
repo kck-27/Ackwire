@@ -11,20 +11,33 @@ const List = ({ sellerToken, userEmail, userBusinessScale }) => {
   const [currentState, setCurrentState] = useState("");
   const [items, setItems] = useState([]);
 
-  const deleteItem = async (itemId) => {
-
+  const deleteItem = async (id) => {
+    try {
+      const res = await axios.post(`${backendURL}/api/${currentState}/delete`, {id}, {headers: {sellerToken}});
+      if (res.data.status === "successful") {
+        console.log(res.data)
+        if (currentState === "products") {
+          toast.success(`Product unpublished successfully!`);
+        }
+        if (currentState === "services") {
+          toast.success(`Service unpublished successfully!`);
+        }
+        await fetchItems();
+      } else {
+        console.log(res.data)
+        toast.error(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.message || error.message);
+    }
   }
 
-  const editItem = async (itemId) => {
+  const editItem = async (id) => {
     
   }
 
-  useEffect(() => {
-    if (!currentState) {
-      return;
-    }
-
-    const fetchItems = async () => {
+  const fetchItems = async () => {
       try {
         const res = await axios.post(
           `${backendURL}/api/${currentState}/all-by-email`,
@@ -41,6 +54,13 @@ const List = ({ sellerToken, userEmail, userBusinessScale }) => {
               toast.error(error.response?.data?.message || error.message);
       }
     };
+
+  useEffect(() => {
+    if (!currentState) {
+      return;
+    }
+
+    
 
     fetchItems();
   }, [currentState]);
@@ -88,7 +108,7 @@ const List = ({ sellerToken, userEmail, userBusinessScale }) => {
             <p className="sm:w-[7%] break-words text-lg font-medium">{currency}{item.price}.00</p>
             <div className="sm:w-15 flex flex-row gap-5">
             <img className="w-10 sm:w-[55%] cursor-pointer" src={assets.edit_icon} alt="" />
-            <img className="w-8 sm:w-[45%] cursor-pointer" src={assets.bin_icon} alt="" />
+            <img onClick={() => deleteItem(item._id)} className="w-8 sm:w-[45%] cursor-pointer" src={assets.bin_icon} alt="" />
             </div>
             
           </div>
