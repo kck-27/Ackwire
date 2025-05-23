@@ -49,8 +49,39 @@ const App = () => {
         theme="light"
       />
 
-      {token === "" ? (
-        <SignIn setToken={setToken} setSellertoken={setSellertoken} setUserEmail={setUserEmail} setUserBusinessScale={setUserBusinessScale}/>
+      <div>
+          <NavBar token={token} sellerToken={sellertoken} setToken={setToken} setSellertoken={setSellertoken} setUserEmail={setUserEmail} setUserBusinessScale={setUserBusinessScale}/>
+
+          <SearchBar />
+
+          <div className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/cart" element={<Cart />} />
+              <Route path="/contacts" element={<Contacts />} />
+              <Route path="/product/:productId" element={<Product />} />
+              <Route path="/products" element={<Products />} />
+              <Route path="/purchase" element={<Purchase />} />
+              <Route path="/purchases" element={<Purchases />} />
+              <Route path="/sign-in" element={<SignIn setToken={setToken} setSellertoken={setSellertoken} setUserEmail={setUserEmail} setUserBusinessScale={setUserBusinessScale}/>} />
+              <Route path="/services" element={<Services />} />
+              <Route path="/service/:serviceId" element={<Service />} />
+              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/sell/*" element={<Sell sellerToken={sellertoken} userEmail={userEmail} userBusinessScale={userBusinessScale}/>} />
+            </Routes>
+          </div>
+
+          <Footer />
+        </div>
+
+      {/* {token === "" ? (
+        <div>
+          <NavBar token={token} sellerToken={sellertoken} setToken={setToken} setSellertoken={setSellertoken}/>
+          <SearchBar/>
+                  <SignIn setToken={setToken} setSellertoken={setSellertoken} setUserEmail={setUserEmail} setUserBusinessScale={setUserBusinessScale}/>
+          <Footer />
+        </div>
       ) : (
         <div>
           <NavBar sellerToken={sellertoken} setToken={setToken} setSellertoken={setSellertoken}/>
@@ -77,7 +108,7 @@ const App = () => {
 
           <Footer />
         </div>
-      )}
+      )} */}
 
       {/* <NavBar/>
       

@@ -9,7 +9,7 @@ const Purchases = () => {
   const combinedArray = [...products, ...services];
 
   return (
-    <div className='border-t border-gray-300 pt-14'>
+    <div className='border-t border-gray-300 pt-14 pb-14'>
       <div className='text-3xl'>
         <Title text1={'YOUR'} text2={'PURCHASES'}/>
       </div>

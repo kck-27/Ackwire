@@ -2,8 +2,9 @@ import React, { useContext, useState } from "react";
 import { assets } from "../assets/assets";
 import { Link, NavLink } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
+import { toast } from "react-toastify";
 
-const NavBar = ({sellerToken, setToken, setSellertoken}) => {
+const NavBar = ({token, sellerToken, setToken, setSellertoken, setUserEmail, setUserBusinessScale}) => {
   const [visible, setVisible] = useState(false);
   const {setDisplaySearch, getTotalQuantity, navigate} = useContext(ShopContext);
 
@@ -42,19 +43,26 @@ const NavBar = ({sellerToken, setToken, setSellertoken}) => {
       <div className="flex items-center gap-6">
         <img onClick={() => setDisplaySearch(true)} src={assets.search_icon} className="w-5 cursor-pointer" alt="" />
         <div className="group relative">
-          <Link to={'/sign-in'}>
+          {token === "" ? <Link to={'/sign-in'}>
           <img
             src={assets.profile_icon}
             className="w-5 cursor-pointer"
             alt=""
           />
-          </Link>
+          </Link> : <img
+            src={assets.profile_icon}
+            className="w-5 cursor-pointer"
+            alt=""
+          />}
+          
+          
           <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
             <div className="flex flex-col gap-2 w-50 py-3 px-5 bg-slate-100 text-gray-500 rounded">
               <p className="cursor-pointer hover:text-black">My Profile</p>
-              <p onClick={() => navigate('/purchases')} className="cursor-pointer hover:text-black">Purchases</p>
+              <p onClick={() => {if(token) {navigate('/purchases')} else {toast.info("Please sign in to perform this action"); navigate('/sign-in')}}} className="cursor-pointer hover:text-black">Purchases</p>
               {sellerToken === "" ? "" : <p className="cursor-pointer hover:text-black" onClick={() => navigate('/sell')}>Sell</p>}
-              <p onClick={() => {setToken(""); setSellertoken(""); navigate('/sign-in')}} className="cursor-pointer  hover:text-black">Sign Out</p>
+              {token === "" ? <p onClick={() => {navigate('/sign-in')}} className="cursor-pointer  hover:text-black">Sign In</p> : <p onClick={() => {setToken(""); setSellertoken(""); setUserEmail(""); setUserBusinessScale(""); navigate('/sign-in')}} className="cursor-pointer  hover:text-black">Sign Out</p>}
+
             </div>
           </div>
         </div>
