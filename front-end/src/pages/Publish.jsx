@@ -97,6 +97,7 @@ const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
         setName("");
         setDescription("");
         setColors([]);
+        setModes([]);
         setFeatures1("");
         setFeatures2("");
         setFeatures3("");
