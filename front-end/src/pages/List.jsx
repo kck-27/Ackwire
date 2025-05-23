@@ -59,15 +59,12 @@ const List = ({ sellerToken, userEmail, userBusinessScale }) => {
     if (!currentState) {
       return;
     }
-
-    
-
     fetchItems();
   }, [currentState]);
 
-  useEffect(() => {
-    console.log(items);
-  }, [items]);
+  // useEffect(() => {
+  //   console.log(items);
+  // }, [items]);
 
   return (
     <>
@@ -104,7 +101,7 @@ const List = ({ sellerToken, userEmail, userBusinessScale }) => {
           >
             <img src={item.image[0]} alt="" className="sm:w-[10%] rounded-2xl border border-gray-300"/>
             <p className="sm:w-[15%] break-words text-lg font-medium sm:pl-5">{item.name}</p>
-            <p className="sm:w-[43%] break-words text-lg sm:pl-3">{item.description.slice(0, 40)}</p>
+            <p className="sm:w-[43%] break-words text-md sm:pl-3">{item.description.slice(0, 200)}</p>
             <p className="sm:w-[7%] break-words text-lg font-medium">{currency}{item.price}.00</p>
             <div className="sm:w-15 flex flex-row gap-5">
             <img className="w-10 sm:w-[55%] cursor-pointer" src={assets.edit_icon} alt="" />

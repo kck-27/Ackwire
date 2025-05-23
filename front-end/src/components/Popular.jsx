@@ -12,11 +12,11 @@ const Popular = () => {
   // Need to change the logic to get the popular products and services
   useEffect(() => {
     setPopularProducts(products.slice(0, 10));
-  }, []);
+  }, [products]);
 
   useEffect(() => {
     setPopularServices(services.slice(0, 10));
-  }, []);
+  }, [services]);
 
 
   return (

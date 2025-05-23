@@ -14,11 +14,11 @@ const Services = () => {
     const [companyScale, setCompanyScale] = useState([]);
     const [sortOption, setSortOption] = useState('popularity');
   
-    const companyScaleMapping = {
-      Small: "S",
-      Medium: "M",
-      Large: "L",
-    };
+    // const companyScaleMapping = {
+    //   Small: "S",
+    //   Medium: "M",
+    //   Large: "L",
+    // };
   
     const filterCategory = (e) => {
       if(category.includes(e.target.value)){
@@ -29,11 +29,11 @@ const Services = () => {
     }
   
     const filterCompanyScale = (e) => {
-      const mappedValue = companyScaleMapping[e.target.value];
-      if(companyScale.includes(mappedValue)){
-        setCompanyScale(companyScale.filter(item => item !== mappedValue))
+      // const mappedValue = companyScaleMapping[e.target.value];
+      if(companyScale.includes(e.target.value)){
+        setCompanyScale(companyScale.filter(item => item !== e.target.value))
       } else {  
-        setCompanyScale([...companyScale, mappedValue])
+        setCompanyScale([...companyScale, e.target.value])
       }
     }
   
@@ -57,6 +57,13 @@ const Services = () => {
   
       if(companyScale.length > 0){
         filteredServices = filteredServices.filter(service => companyScale.includes(service.companyScale))
+      }
+
+      if (sortOption === 'price-low-high') {
+        filteredServices = filteredServices.sort((a, b) => a.price - b.price);
+      }
+      if (sortOption === 'price-high-low') {
+        filteredServices = filteredServices.sort((a, b) => b.price - a.price);
       }
       setFilterServices(filteredServices)
     }
@@ -83,7 +90,7 @@ const Services = () => {
   
     useEffect(() => {
       applyFilter()
-    }, [category, companyScale, search, displaySearch])
+    }, [category, companyScale, search, displaySearch, services])
 
   return (
     <div className='flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t border-gray-300 mb-20'>
@@ -116,13 +123,13 @@ const Services = () => {
               <p className='mb-3 text-sm font-medium'>Company Scale</p>
               <div className='flex flex-col gap-2 text-sm font-light text-gray-900'>
                 <p className='flex gap-2'>
-                  <input className='w-4 black-checkbox' type="checkbox" value={'Small'} onChange={filterCompanyScale}/> Small
+                  <input className='w-4 black-checkbox' type="checkbox" value={'small'} onChange={filterCompanyScale}/> Small
                 </p>
                 <p className='flex gap-2'>
-                  <input className='w-4 black-checkbox' type="checkbox" value={'Medium'} onChange={filterCompanyScale}/> Medium
+                  <input className='w-4 black-checkbox' type="checkbox" value={'medium'} onChange={filterCompanyScale}/> Medium
                 </p>
                 <p className='flex gap-2'>
-                  <input className='w-4 black-checkbox' type="checkbox" value={'Large'} onChange={filterCompanyScale}/> Large
+                  <input className='w-4 black-checkbox' type="checkbox" value={'large'} onChange={filterCompanyScale}/> Large
                 </p>
               </div>
             </div>
@@ -138,7 +145,7 @@ const Services = () => {
               <select onChange={(e) => setSortOption(e.target.value)} className='border-2 border-gray-300 text-md px-2 py-3 ml-2 sm:mr-25'>
                 <option value="popularity">Popularity</option>
                 <option value="price-low-high">Price: Low to High</option>
-                <option value="price-high-low">Price High to Low</option>
+                <option value="price-high-low">Price: High to Low</option>
               </select>
               </p>
             </div>
