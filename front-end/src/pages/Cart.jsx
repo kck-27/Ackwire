@@ -12,7 +12,7 @@ const Cart = () => {
   const [cartDetails, setCartDetails] = useState([]);
 
   useEffect(() => {
-    if (products.length > 0 || services.length > 0) {
+    if (products.length > 0 && services.length > 0) {
       let tempCartDetails = [];
       for (const item in cartItems) {
         for (const attribute in cartItems[item]) {
@@ -27,7 +27,7 @@ const Cart = () => {
       }
       setCartDetails(tempCartDetails);
     }
-  }, [cartItems, updateQuantity])
+  }, [cartItems, updateQuantity, products, services])
 
   return cartDetails.length > 0 ? (
     <div className='border-t border-gray-300 pt-14'>
@@ -37,9 +37,10 @@ const Cart = () => {
 
       <div className='mt-10'>
         {
-          
+        
           cartDetails.map((cartItem, index) => {
             const combinedArray = [...products, ...services];
+
             const item = combinedArray.find((_item) => _item._id === cartItem._id);
 
             return (

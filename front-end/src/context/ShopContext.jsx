@@ -53,6 +53,16 @@ const ShopContextProvider = (props) => {
             tempCartItems[itemId] = {[attribute]: 1};
         }
         setCartItems(tempCartItems);
+
+        if(localStorage.getItem("token") !== "") {
+            try {
+                await axios.post(`${backendURL}/api/cart/add`, {itemId, attribute}, {headers: {token: localStorage.getItem("token")}});
+            } catch (error) {
+                console.log(error);
+                toast.error(error.response?.data?.message || error.message);
+            }
+        }
+        
     };
 
     const getQuantityByItem = (itemId, attribute) => {
@@ -90,6 +100,15 @@ const ShopContextProvider = (props) => {
             
         }
         setCartItems(tempCartItems);
+
+        if(localStorage.getItem("token") !== "") {
+            try {
+                await axios.post(`${backendURL}/api/cart/update`, {itemId, attribute,quantity}, {headers: {token: localStorage.getItem("token")}});
+            } catch (error) {
+                console.log(error);
+                toast.error(error.response?.data?.message || error.message);
+            }
+        }
     }
 
     const getFullCost = () => {
@@ -129,9 +148,31 @@ const ShopContextProvider = (props) => {
         }
     }
 
+    const getCartItems = async (token) => {
+        try {
+            const res = await axios.post(`${backendURL}/api/cart/get`, {}, {headers: {token}});
+            if (res.data.status === "successful") {
+                console.log(res.data.cart)
+                setCartItems(res.data.cart);
+            }
+        } catch (error) {
+            console.log(error);
+                toast.error(error.response?.data?.message || error.message);
+        }
+    }
+
     useEffect(() => {
         fetchItems();
     }, []);
+
+    useEffect(() => {
+        if (localStorage.getItem("token") !== "") {
+            getCartItems(localStorage.getItem("token"));
+        }
+        if (localStorage.getItem("token") === "") {
+            setCartItems({});
+        }
+    }, [localStorage.getItem("token")]);
 
     const value = {
         products, services, currency, delivery_fee, search, setSearch, displaySearch, setDisplaySearch, cartItems, addToCart, getQuantityByItem, getTotalQuantity, updateQuantity, getFullCost, navigate

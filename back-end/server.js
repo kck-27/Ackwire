@@ -7,6 +7,7 @@ import cloudinaryConfig from './config/cloudinary.js'
 import userRouter from './routes/userRoutes.js'
 import productRouter from './routes/productRoutes.js'
 import serviceRouter from './routes/serviceRoutes.js'
+import cartRouter from './routes/cartRoutes.js'
 
 // App config
 
@@ -24,6 +25,7 @@ app.use(cors())
 app.use('/api/user', userRouter)
 app.use('/api/products', productRouter)
 app.use('/api/services', serviceRouter)
+app.use('/api/cart', cartRouter)
 
 app.get('/', (req, res) => {
 res.send("Endpoint up")

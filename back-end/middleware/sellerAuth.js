@@ -9,13 +9,12 @@ const sellerAuth = async (req, res, next) => {
         const decoded = jwt.verify(sellertoken, process.env.JWT_SECRET_KEY);
         
         if (decoded !== process.env.SELLER_SECRET_KEY) {
-            console.log(decoded + process.env.SELLER_SECRET_KEY);
             return res.status(401).json({status: "unsuccessful", message: "Unauthorized"});
         }
         next();
     } catch (error) {
         console.log(error);
-        res.status(500).json({ message: error.message });
+        res.status(500).json({status: "unsuccessful", message: error.message });
     }
 }
 
