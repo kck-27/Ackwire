@@ -152,7 +152,6 @@ const ShopContextProvider = (props) => {
         try {
             const res = await axios.post(`${backendURL}/api/cart/get`, {}, {headers: {token}});
             if (res.data.status === "successful") {
-                console.log(res.data.cart)
                 setCartItems(res.data.cart);
             }
         } catch (error) {
@@ -175,7 +174,7 @@ const ShopContextProvider = (props) => {
     }, [localStorage.getItem("token")]);
 
     const value = {
-        products, services, currency, delivery_fee, search, setSearch, displaySearch, setDisplaySearch, cartItems, addToCart, getQuantityByItem, getTotalQuantity, updateQuantity, getFullCost, navigate
+        products, services, currency, delivery_fee, search, setSearch, displaySearch, setDisplaySearch, cartItems, setCartItems, addToCart, getQuantityByItem, getTotalQuantity, updateQuantity, getFullCost, navigate
     }
 
     return (

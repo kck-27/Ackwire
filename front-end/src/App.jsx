@@ -17,6 +17,7 @@ import SearchBar from "./components/SearchBar";
 import Checkout from "./pages/Checkout";
 import { ToastContainer, toast } from "react-toastify";
 import Sell from "./pages/Sell";
+import Validate from "./pages/Validate";
 
 export const backendURL = import.meta.env.VITE_BACKEND_URL;
 export const currency = import.meta.env.VITE_CURRENCY;
@@ -63,12 +64,13 @@ const App = () => {
               <Route path="/product/:productId" element={<Product />} />
               <Route path="/products" element={<Products />} />
               <Route path="/purchase" element={<Purchase />} />
-              <Route path="/purchases" element={<Purchases />} />
+              <Route path="/purchases" element={<Purchases token={token} sellerToken={sellertoken} userEmail={userEmail}/>} />
               <Route path="/sign-in" element={<SignIn setToken={setToken} setSellertoken={setSellertoken} setUserEmail={setUserEmail} setUserBusinessScale={setUserBusinessScale}/>} />
               <Route path="/services" element={<Services />} />
               <Route path="/service/:serviceId" element={<Service />} />
-              <Route path="/checkout" element={<Checkout />} />
+              <Route path="/checkout" element={<Checkout token={token} sellerToken={sellertoken} userEmail={userEmail}/>} />
               <Route path="/sell/*" element={<Sell sellerToken={sellertoken} userEmail={userEmail} userBusinessScale={userBusinessScale}/>} />
+              <Route path="/validate" element={<Validate token={token}/>} />
             </Routes>
           </div>
 

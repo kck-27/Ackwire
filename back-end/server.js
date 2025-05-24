@@ -8,6 +8,7 @@ import userRouter from './routes/userRoutes.js'
 import productRouter from './routes/productRoutes.js'
 import serviceRouter from './routes/serviceRoutes.js'
 import cartRouter from './routes/cartRoutes.js'
+import orderRouter from './routes/orderRoutes.js'
 
 // App config
 
@@ -26,6 +27,7 @@ app.use('/api/user', userRouter)
 app.use('/api/products', productRouter)
 app.use('/api/services', serviceRouter)
 app.use('/api/cart', cartRouter)
+app.use('/api/orders', orderRouter)
 
 app.get('/', (req, res) => {
 res.send("Endpoint up")
