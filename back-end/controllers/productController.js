@@ -107,6 +107,8 @@ const updateProductById = async (req, res) => {
             })
         );
 
+        console.log(image1)
+
         const productObject = {
             name, 
             description, 

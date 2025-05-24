@@ -4,11 +4,12 @@ import { ShopContext } from '../context/ShopContext';
 import { useState } from 'react';
 import { assets } from '../assets/assets';
 import RelatedProducts from '../components/RelatedProducts';
+import Spinner from '../components/Spinner';
 
 const Product = () => {
 
   const {productId} = useParams();
-  const {products, currency, addToCart} = useContext(ShopContext);
+  const {products, currency, addToCart, loading, setLoading} = useContext(ShopContext);
   const [productObject, setProductObject] = useState(false);
   const [image, setImage] = useState('');
   const [color, setColor] = useState('');
@@ -24,8 +25,16 @@ const Product = () => {
   }
 
   useEffect(() => {
+    setLoading(true);
   loadProductObject();
+  setLoading(false);
   }, [productId, products]);
+
+    if (loading) {
+  return (
+        <Spinner />  
+  );
+}
 
   return productObject ? (
     <div className='border-t border-gray-300 pt-10 transition-opacity ease-in-out duration-500 opacity-100'>

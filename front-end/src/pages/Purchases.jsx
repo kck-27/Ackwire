@@ -5,14 +5,16 @@ import Title from '../components/Title';
 import axios from 'axios';
 import { backendURL } from '../App';
 import { toast } from 'react-toastify';
+import Spinner from '../components/Spinner';
 
 const Purchases = ({token, sellertoken, userEmail}) => {
 
-  const {products, services, currency} = useContext(ShopContext);
+  const {products, services, currency, loading, setLoading} = useContext(ShopContext);
   const combinedArray = [...products, ...services];
   const [purchases, setPurchases] = useState([]);
 
   const fetchOrders = async () => {
+    setLoading(true);
        try {
         if (!token) {
           return null;
@@ -30,6 +32,8 @@ const Purchases = ({token, sellertoken, userEmail}) => {
    } catch (error) {
     console.log(error);
               toast.error(error.response?.data?.message || error.message);
+   } finally {
+    setLoading(false);
    }
   }
 
@@ -37,6 +41,13 @@ const Purchases = ({token, sellertoken, userEmail}) => {
    useEffect(() => {
     fetchOrders();
    }, []);
+
+
+     if (loading) {
+  return (
+        <Spinner />  
+  );
+}
 
   return (
     <div className='border-t border-gray-300 pt-14 pb-14'>

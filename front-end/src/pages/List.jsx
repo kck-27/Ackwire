@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useEffect } from "react";
 import { useState } from "react";
 import { backendURL } from "../App";
@@ -6,12 +6,25 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { currency } from "../App";
 import { assets } from "../assets/assets";
+import { ShopContext } from "../context/ShopContext";
+import { useSearchParams } from "react-router-dom";
+import Spinner from "../components/Spinner";
 
 const List = ({ sellerToken, userEmail, userBusinessScale }) => {
+  const [searchParams] = useSearchParams();
+  const {navigate, loading, setLoading} = useContext(ShopContext);
   const [currentState, setCurrentState] = useState("");
   const [items, setItems] = useState([]);
 
+  useEffect(() => {
+    const itemType = searchParams.get("type");
+    if (itemType && (`${itemType}s` === "products" || `${itemType}s` === "services")) {
+      setCurrentState(`${itemType}s`);
+    }
+  }, [searchParams]);
+
   const deleteItem = async (id) => {
+    setLoading(true);
     try {
       const res = await axios.post(`${backendURL}/api/${currentState}/delete`, {id}, {headers: {sellerToken}});
       if (res.data.status === "successful") {
@@ -30,14 +43,17 @@ const List = ({ sellerToken, userEmail, userBusinessScale }) => {
     } catch (error) {
       console.log(error);
       toast.error(error.response?.data?.message || error.message);
+    } finally {
+      setLoading(false);
     }
   }
 
-  const editItem = async (id) => {
-    
+  const editItem = async (id, type) => {
+    navigate(`/sell/edit?itemId=${id}&type=${type}`);
   }
 
   const fetchItems = async () => {
+    setLoading(true);
       try {
         const res = await axios.post(
           `${backendURL}/api/${currentState}/all-by-email`,
@@ -52,6 +68,8 @@ const List = ({ sellerToken, userEmail, userBusinessScale }) => {
       } catch (error) {
         console.log(error);
               toast.error(error.response?.data?.message || error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -65,6 +83,12 @@ const List = ({ sellerToken, userEmail, userBusinessScale }) => {
   // useEffect(() => {
   //   console.log(items);
   // }, [items]);
+
+    if (loading) {
+  return (
+        <Spinner />  
+  );
+}
 
   return (
     <>
@@ -104,7 +128,8 @@ const List = ({ sellerToken, userEmail, userBusinessScale }) => {
             <p className="sm:w-[43%] break-words text-md sm:pl-3">{item.description.slice(0, 200)}</p>
             <p className="sm:w-[7%] break-words text-lg font-medium">{currency}{item.price}.00</p>
             <div className="sm:w-15 flex flex-row gap-5">
-            <img className="w-10 sm:w-[55%] cursor-pointer" src={assets.edit_icon} alt="" />
+              {'color' in item ? <img className="w-10 sm:w-[55%] cursor-pointer" onClick={() => editItem(item._id, "product")} src={assets.edit_icon} alt="" /> : <img className="w-10 sm:w-[55%] cursor-pointer" onClick={() => editItem(item._id, "service")} src={assets.edit_icon} alt="" />}
+            
             <img onClick={() => deleteItem(item._id)} className="w-8 sm:w-[45%] cursor-pointer" src={assets.bin_icon} alt="" />
             </div>
             

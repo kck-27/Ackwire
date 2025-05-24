@@ -5,10 +5,11 @@ import { assets } from '../assets/assets';
 import Title from '../components/Title';
 import ProductItem from '../components/ProductItem';
 import { use } from 'react';
+import Spinner from '../components/Spinner';
 
 const Products = () => {
 
-  const { products, search, displaySearch } = useContext(ShopContext);
+  const { products, search, displaySearch, loading, setLoading } = useContext(ShopContext);
   const [showFilter, setShowFilter] = useState(false);
   const [filterProducts, setFilterProducts] = useState([]);
   const [category, setCategory] = useState([]);
@@ -22,23 +23,28 @@ const Products = () => {
   // };
 
   const filterCategory = (e) => {
+    setLoading(true);
     if(category.includes(e.target.value)){
       setCategory(category.filter(item => item !== e.target.value))
     } else {  
       setCategory([...category, e.target.value])
     }
+    setLoading(false);
   }
 
   const filterCompanyScale = (e) => {
+    setLoading(true);
     // const mappedValue = companyScaleMapping[e.target.value];
     if(companyScale.includes(e.target.value)){
       setCompanyScale(companyScale.filter(item => item !== e.target.value))
     } else {  
       setCompanyScale([...companyScale, e.target.value])
     }
+    setLoading(false);
   }
 
   const applyFilter = () => {
+    setLoading(true);
     let filteredProducts = products.slice();
 
     if(displaySearch && search){
@@ -67,9 +73,11 @@ const Products = () => {
         filteredProducts = filteredProducts.sort((a, b) => b.price - a.price);
       }
     setFilterProducts(filteredProducts)
+    setLoading(false);
   }
 
   const sortProducts = () => {
+    setLoading(true);
     let tempFilteredProducts = filterProducts.slice();
     
     switch(sortOption){
@@ -83,15 +91,26 @@ const Products = () => {
         applyFilter();
         break;
     }
+    setLoading(false);
   }
 
   useEffect(() => {
+    setLoading(true);
     sortProducts()
+    setLoading(false);
   }, [sortOption])
 
   useEffect(() => {
+    setLoading(true);
     applyFilter()
+    setLoading(false);
   }, [category, companyScale, search, displaySearch, products])
+
+    if (loading) {
+  return (
+        <Spinner />  
+  );
+}
 
   return (
     <div className='flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t border-gray-300 mb-20'>

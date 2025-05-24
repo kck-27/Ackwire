@@ -1,14 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
-import { assets } from "../assets/assets";
 import axios from "axios";
+import React, { useContext, useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { backendURL } from "../App";
-import { toast } from "react-toastify";
+import { useSearchParams } from "react-router-dom";
+import { assets } from "../assets/assets";
 import { ShopContext } from "../context/ShopContext";
+import { toast } from "react-toastify";
 import Spinner from "../components/Spinner";
 
-const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
-  const {loading, setLoading} = useContext(ShopContext);
-  const [currentState, setCurrentState] = useState("product");
+const Edit = ({ sellerToken, userEmail, userBusinessScale }) => {
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [colors, setColors] = useState([]);
@@ -37,14 +37,79 @@ const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
   const [image3, setImage3] = useState(false);
   const [image4, setImage4] = useState(false);
   const [bestseller, setBestseller] = useState(false);
+  const [searchParams] = useSearchParams();
+  const itemId = searchParams.get("itemId");
+  const type = searchParams.get("type");
+  // const [item, setItem] = useState({});
+  const { navigate, loading, setLoading } = useContext(ShopContext);
+
+  async function urlToFile(url, filename, mimeType) {
+    const response = await fetch(url);
+    const blob = await response.blob();
+    return new File([blob], filename, { type: mimeType });
+  }
+
+  const fetchItem = async () => {
+    setLoading(true);
+    try {
+      if (!sellerToken) {
+        return null;
+      }
+
+      const res = await axios.post(`${backendURL}/api/${type}s/get`, {
+        id: itemId,
+      });
+      if (res.data.status === "successful") {
+        const fetchedItem = res.data[type];
+        //   setItem(fetchedItem);
+        setName(fetchedItem.name || "");
+        setDescription(fetchedItem.description || "");
+        setColors(fetchedItem.color || []);
+        setModes(fetchedItem.mode || []);
+        setFeatures1(fetchedItem.features?.[0] || "");
+        setFeatures2(fetchedItem.features?.[1] || "");
+        setFeatures3(fetchedItem.features?.[2] || "");
+        setFeatures4(fetchedItem.features?.[3] || "");
+        setFeatures5(fetchedItem.features?.[4] || "");
+        setFeatures6(fetchedItem.features?.[5] || "");
+        setAdditionalInformation1(fetchedItem.more_info?.[0] || "");
+        setAdditionalInformation2(fetchedItem.more_info?.[1] || "");
+        setAdditionalInformation3(fetchedItem.more_info?.[2] || "");
+        setAdditionalInformation4(fetchedItem.more_info?.[3] || "");
+        setAdditionalInformation5(fetchedItem.more_info?.[4] || "");
+        setAdditionalInformation6(fetchedItem.more_info?.[5] || "");
+        setTerms1(fetchedItem.terms?.[0] || "");
+        setTerms2(fetchedItem.terms?.[1] || "");
+        setTerms3(fetchedItem.terms?.[2] || "");
+        setTerms4(fetchedItem.terms?.[3] || "");
+        setCategory(fetchedItem.category || "");
+        setSubCategory(fetchedItem.subCategory || "");
+        setPrice(fetchedItem.price || "");
+        setBestseller(fetchedItem.bestseller || false);
+        setImage1(fetchedItem.image?.[0] || false);
+        setImage2(fetchedItem.image?.[1] || false);
+        setImage3(fetchedItem.image?.[2] || false);
+        setImage4(fetchedItem.image?.[3] || false);
+      } else {
+        console.log(res.data);
+        toast.error(res.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error(error.response?.data?.message || error.message);
+    } finally {
+        setLoading(false);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
     if (!image1) {
       alert("Please attach at least one image.");
       return;
     }
-    setLoading(true);
+
     try {
       const features = [
         features1,
@@ -67,6 +132,7 @@ const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
       );
 
       const formdata = new FormData();
+      formdata.append("id", itemId);
       formdata.append("name", name);
       formdata.append("description", description);
       formdata.append("price", price);
@@ -77,54 +143,109 @@ const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
       formdata.append("terms", JSON.stringify(terms));
       formdata.append("features", JSON.stringify(features));
       formdata.append("more_info", JSON.stringify(additionalInformation));
-      if (currentState === "product") {
+      if (type === "product") {
         formdata.append("color", JSON.stringify(colors));
       }
-      if (currentState === "service") {
+      if (type === "service") {
         formdata.append("mode", JSON.stringify(modes));
       }
       formdata.append("bestseller", bestseller);
-      image1 && formdata.append("image1", image1);
-      image2 && formdata.append("image2", image2);
-      image3 && formdata.append("image3", image3);
-      image4 && formdata.append("image4", image4);
+
+      //   if (image1) {
+      //     const file1 = await urlToFile(image1, "image1.png", "image/png");
+      //     console.log(file1)
+      //     setImage1(file1);
+      //   } else {
+      //     setImage1(false);
+      //   }
+
+      //   if (image2) {
+      //     const file2 = await urlToFile(image2, "image1.png", "image/png");
+      //     setImage1(file2);
+      //   } else {
+      //     setImage1(false);
+      //   }
+
+      //   if (image3) {
+      //     const file3 = await urlToFile(image3, "image1.png", "image/png");
+      //     setImage1(file3);
+      //   } else {
+      //     setImage1(false);
+      //   }
+      //   if (image4) {
+      //     const file4 = await urlToFile(image4, "image1.png", "image/png");
+      //     setImage1(file4);
+      //   } else {
+      //     setImage1(false);
+      //   }
+
+      //   image1 && formdata.append("image1", image1);
+      //   image2 && formdata.append("image2", image2);
+      //   image3 && formdata.append("image3", image3);
+      //   image4 && formdata.append("image4", image4);
+
+      let file1 = image1;
+      if (image1 && typeof image1 === "string") {
+        file1 = await urlToFile(image1, "image1.png", "image/png");
+      }
+      file1 && formdata.append("image1", file1);
+
+      let file2 = image2;
+      if (image2 && typeof image2 === "string") {
+        file2 = await urlToFile(image2, "image2.png", "image/png");
+      }
+      file2 && formdata.append("image2", file2);
+
+      let file3 = image3;
+      if (image3 && typeof image3 === "string") {
+        file3 = await urlToFile(image3, "image3.png", "image/png");
+      }
+      file3 && formdata.append("image3", file3);
+
+      let file4 = image4;
+      if (image4 && typeof image4 === "string") {
+        file4 = await urlToFile(image4, "image4.png", "image/png");
+      }
+      file4 && formdata.append("image4", file4);
+
       formdata.append("userEmail", userEmail);
 
-      const res = await axios.post(
-        `${backendURL}/api/${currentState}s/create`,
+      const res = await axios.put(
+        `${backendURL}/api/${type}s/update`,
         formdata,
         { headers: { sellerToken } }
       );
       if (res.data.status === "successful") {
-        toast.success(`The ${currentState} has been published successfully!`);
-        setName("");
-        setDescription("");
-        setColors([]);
-        setModes([]);
-        setFeatures1("");
-        setFeatures2("");
-        setFeatures3("");
-        setFeatures4("");
-        setFeatures5("");
-        setFeatures6("");
-        setAdditionalInformation1("");
-        setAdditionalInformation2("");
-        setAdditionalInformation3("");
-        setAdditionalInformation4("");
-        setAdditionalInformation5("");
-        setAdditionalInformation6("");
-        setTerms1("");
-        setTerms2("");
-        setTerms3("");
-        setTerms4("");
-        setCategory("");
-        setSubCategory("");
-        setPrice("");
-        setImage1(false);
-        setImage2(false);
-        setImage3(false);
-        setImage4(false);
-        setBestseller(false);
+        toast.success(`The ${type} has been published successfully!`);
+        navigate(`/sell/list?type=${type}`);
+        // setName("");
+        // setDescription("");
+        // setColors([]);
+        // setModes([]);
+        // setFeatures1("");
+        // setFeatures2("");
+        // setFeatures3("");
+        // setFeatures4("");
+        // setFeatures5("");
+        // setFeatures6("");
+        // setAdditionalInformation1("");
+        // setAdditionalInformation2("");
+        // setAdditionalInformation3("");
+        // setAdditionalInformation4("");
+        // setAdditionalInformation5("");
+        // setAdditionalInformation6("");
+        // setTerms1("");
+        // setTerms2("");
+        // setTerms3("");
+        // setTerms4("");
+        // setCategory("");
+        // setSubCategory("");
+        // setPrice("");
+        // setImage1(false);
+        // setImage2(false);
+        // setImage3(false);
+        // setImage4(false);
+        // setBestseller(false);
       } else {
         toast.error(res.data.message);
       }
@@ -132,9 +253,13 @@ const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
       console.log(error);
       toast.error(error.response?.data?.message || error.message);
     } finally {
-      setLoading(false);
+        setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchItem();
+  }, [itemId]);
 
   if (loading) {
   return (
@@ -147,25 +272,25 @@ const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
       onSubmit={handleSubmit}
       className="flex flex-col items-start gap-4 w-full text-[14px] font-medium"
     >
-      <div className="w-full">
-        <p className="mb-3">Product or Service? </p>
-        <select
-          onChange={(e) => setCurrentState(e.target.value)}
-          value={currentState}
-          name="currentState"
-          className=" px-3 py-2 border border-gray-300 rounded-xl"
-          required
-        >
-          <option value="" disabled hidden>
-            Publish a Product or a Service?
-          </option>
-          <option value="product">Product</option>
-          <option value="service">Service</option>
-        </select>
-      </div>
+      {/* <div className="w-full">
+          <p className="mb-3">Product or Service? </p>
+          <select
+            onChange={(e) => settype(e.target.value)}
+            value={type}
+            name="type"
+            className=" px-3 py-2 border border-gray-300 rounded-xl"
+            required
+          >
+            <option value="" disabled hidden>
+              Publish a Product or a Service?
+            </option>
+            <option value="product">Product</option>
+            <option value="service">Service</option>
+          </select>
+        </div> */}
 
       <div className="w-full">
-        {currentState === "product" ? (
+        {type === "product" ? (
           <p className="mb-3">Product Name: </p>
         ) : (
           <p className="mb-3">Service Name: </p>
@@ -176,13 +301,13 @@ const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
           value={name}
           className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
           type="text"
-          placeholder={`Enter ${currentState} name`}
+          placeholder={`Enter ${type} name`}
           required
         />
       </div>
 
       <div className="w-full">
-        {currentState === "product" ? (
+        {type === "product" ? (
           <p className="mb-3">Product Description: </p>
         ) : (
           <p className="mb-3">Service Description: </p>
@@ -193,19 +318,19 @@ const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
           value={description}
           className="w-full max-w-[550px] py-1.5 px-3.5 rounded border border-gray-300"
           type="text"
-          placeholder={`Describe your ${currentState} briefly`}
+          placeholder={`Describe your ${type} briefly`}
           required
         />
       </div>
 
       <div>
-        {currentState === "product" ? (
+        {type === "product" ? (
           <p className="mb-3">Available Colors: </p>
         ) : (
           <p className="mb-3">Available Modes: </p>
         )}
 
-        {currentState === "product" ? (
+        {type === "product" ? (
           <div className="grid sm:flex gap-4">
             <div
               onClick={() =>
@@ -572,18 +697,22 @@ const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
 
       <div className="flex flex-col sm:flex-row w-full gap-2 sm:gap-6">
         <div className="w-full">
-          {currentState === "product" ? (
+          {type === "product" ? (
             <p className="mb-3">Product Category: </p>
           ) : (
             <p className="mb-3">Service Category: </p>
           )}
 
-          {currentState === "product" ? (
+          {type === "product" ? (
             <select
-              onChange={(e) => setCategory(e.target.value)} value={category}
-              className="rounded border border-gray-300" required
+              onChange={(e) => setCategory(e.target.value)}
+              value={category}
+              className="rounded border border-gray-300"
+              required
             >
-              <option value="" disabled hidden>Select Category</option>
+              <option value="" disabled hidden>
+                Select Category
+              </option>
               <option value="Electronics">Electronics</option>
               <option value="Home Appliances">Home Appliances</option>
               <option value="Sports">Sports</option>
@@ -593,10 +722,14 @@ const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
             </select>
           ) : (
             <select
-              onChange={(e) => setCategory(e.target.value)} value={category}
-              className="rounded border border-gray-300" required
+              onChange={(e) => setCategory(e.target.value)}
+              value={category}
+              className="rounded border border-gray-300"
+              required
             >
-              <option value="" disabled hidden>Select Category</option>
+              <option value="" disabled hidden>
+                Select Category
+              </option>
               <option value="Administrative Services">
                 Administrative Services
               </option>
@@ -620,18 +753,22 @@ const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
         </div>
 
         <div className="w-full">
-          {currentState === "product" ? (
+          {type === "product" ? (
             <p className="mb-3">Product Sub-Category: </p>
           ) : (
             <p className="mb-3">Service Sub-Category: </p>
           )}
 
-          {currentState === "product" ? (
+          {type === "product" ? (
             <select
-              onChange={(e) => setSubCategory(e.target.value)} value={subCategory}
-              className="rounded border border-gray-300" required
+              onChange={(e) => setSubCategory(e.target.value)}
+              value={subCategory}
+              className="rounded border border-gray-300"
+              required
             >
-              <option value="" disabled hidden>Select Sub-Category</option>
+              <option value="" disabled hidden>
+                Select Sub-Category
+              </option>
               <option value="Accessories">Accessories</option>
               <option value="Audio">Audio</option>
               <option value="Bags">Bags</option>
@@ -654,10 +791,14 @@ const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
             </select>
           ) : (
             <select
-              onChange={(e) => setSubCategory(e.target.value)} value={subCategory}
-              className="rounded border border-gray-300" required
+              onChange={(e) => setSubCategory(e.target.value)}
+              value={subCategory}
+              className="rounded border border-gray-300"
+              required
             >
-              <option value="" disabled hidden>Select Sub-Category</option>
+              <option value="" disabled hidden>
+                Select Sub-Category
+              </option>
               <option value="App Development">App Development</option>
               <option value="Branding">Branding</option>
               <option value="Consulting">Consulting</option>
@@ -682,7 +823,7 @@ const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
         </div>
 
         <div className="w-full">
-          {currentState === "product" ? (
+          {type === "product" ? (
             <p className="mb-3">Product Price: </p>
           ) : (
             <p className="mb-3">Service Price: </p>
@@ -692,7 +833,8 @@ const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
             value={price}
             type="number"
             placeholder="00"
-            className="rounded border border-gray-300" required
+            className="rounded border border-gray-300"
+            required
           />
         </div>
       </div>
@@ -704,7 +846,13 @@ const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
             <label htmlFor="image1">
               <img
                 className="w-15 border border-gray-300 rounded-lg p-2 cursor-pointer"
-                src={image1 ? URL.createObjectURL(image1) : assets.attach_icon}
+                src={
+                  image1
+                    ? typeof image1 === "string"
+                      ? image1
+                      : URL.createObjectURL(image1)
+                    : assets.attach_icon
+                }
                 alt=""
               />
               <input
@@ -718,7 +866,13 @@ const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
             <label htmlFor="image2">
               <img
                 className="w-15 border border-gray-300 rounded-lg p-2 cursor-pointer"
-                src={image2 ? URL.createObjectURL(image2) : assets.attach_icon}
+                src={
+                  image2
+                    ? typeof image2 === "string"
+                      ? image2
+                      : URL.createObjectURL(image2)
+                    : assets.attach_icon
+                }
                 alt=""
               />
               <input
@@ -732,7 +886,13 @@ const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
             <label htmlFor="image3">
               <img
                 className="w-15 border border-gray-300 rounded-lg p-2 cursor-pointer"
-                src={image3 ? URL.createObjectURL(image3) : assets.attach_icon}
+                src={
+                  image3
+                    ? typeof image3 === "string"
+                      ? image3
+                      : URL.createObjectURL(image3)
+                    : assets.attach_icon
+                }
                 alt=""
               />
               <input
@@ -746,7 +906,13 @@ const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
             <label htmlFor="image4">
               <img
                 className="w-15 border border-gray-300 rounded-lg p-2 cursor-pointer"
-                src={image4 ? URL.createObjectURL(image4) : assets.attach_icon}
+                src={
+                  image4
+                    ? typeof image4 === "string"
+                      ? image4
+                      : URL.createObjectURL(image4)
+                    : assets.attach_icon
+                }
                 alt=""
               />
               <input
@@ -760,7 +926,7 @@ const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
         </div>
 
         <div className="flex gap-2 mt-10">
-          {currentState === "product" ? (
+          {type === "product" ? (
             <label className="cursor-pointer mt-4" htmlFor="bestseller">
               Bestseller Product?
             </label>
@@ -783,10 +949,10 @@ const Publish = ({ sellerToken, userEmail, userBusinessScale }) => {
         type="submit"
         className="text-sm bg-black text-white mt-5 mb-5 px-8 py-3 active:bg-gray-800 cursor-pointer"
       >
-        Publish
+        Submit
       </button>
     </form>
   );
 };
 
-export default Publish;
+export default Edit;

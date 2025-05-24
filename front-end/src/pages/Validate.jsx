@@ -4,17 +4,19 @@ import { useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { backendURL } from '../App';
 import { toast } from 'react-toastify';
+import Spinner from '../components/Spinner';
 
 const Validate = ({token}) => {
 
-    const {navigate, setCartItems} = useContext(ShopContext);
-    const [searchParams, setSearchParams] = useSearchParams();
+    const {navigate, setCartItems, loading, setLoading} = useContext(ShopContext);
+    const [searchParams] = useSearchParams();
 
     const success = searchParams.get('success');
     const orderId = searchParams.get('orderId');
 
 
     const validatePayment = async () => {
+        setLoading(true);
         try {
             if (!token) {
                 return null;
@@ -31,12 +33,20 @@ const Validate = ({token}) => {
             console.log(error);
             toast.error(error.response?.data?.message || error.message);
             navigate('/cart');
+        } finally {
+            setLoading(false);
         }
     }
 
     useEffect(() => {
         validatePayment();
     }, [token]);
+
+      if (loading) {
+  return (
+        <Spinner />  
+  );
+}
 
   return (
     <div></div>

@@ -7,10 +7,11 @@ import { ShopContext } from '../context/ShopContext'
 import axios from 'axios'
 import { backendURL } from '../App'
 import { toast } from 'react-toastify';
+import Spinner from '../components/Spinner'
 
 const Checkout = ({token, sellertoken, userEmail}) => {
 
-    const {products, services, currency, cartItems, setCartItems, getTotalQuantity, getQuantityByItem, updateQuantity, delivery_fee, getFullCost, navigate} = useContext(ShopContext);
+    const {products, services, currency, cartItems, setCartItems, getTotalQuantity, getQuantityByItem, updateQuantity, delivery_fee, getFullCost, navigate, loading, setLoading} = useContext(ShopContext);
     const [paymentMethod, setPaymentMethod] = useState('stripe');
     const [form, setForm] = useState({
         firstName: '',
@@ -38,6 +39,7 @@ const Checkout = ({token, sellertoken, userEmail}) => {
         e.preventDefault();
 
         if (products.length > 0 && services.length > 0) {
+            setLoading(true);
                 try {
             const combinedArray = [...products, ...services];
             let tempSellerEmails = [];
@@ -104,11 +106,19 @@ const Checkout = ({token, sellertoken, userEmail}) => {
         } catch (error) {
             console.log(error);
               toast.error(error.response?.data?.message || error.message);
+        } finally {
+            setLoading(false);
         }
             }
         
 
     }
+
+      if (loading) {
+  return (
+        <Spinner />  
+  );
+}
     
   return (
     <form onSubmit={handleSubmit} className='flex flex-col sm:flex-row gap-4 justify-between pt-5 sm:pt-15 min-h-[80vh] border-t border-gray-300'>

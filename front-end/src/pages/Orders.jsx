@@ -3,10 +3,11 @@ import React, { useContext, useEffect, useState } from 'react'
 import { backendURL } from '../App';
 import Title from '../components/Title';
 import { ShopContext } from '../context/ShopContext';
+import Spinner from '../components/Spinner';
 
 const Orders = ({sellerToken, userEmail, userBusinessScale}) => {
 
-  const {currency} = useContext(ShopContext);
+  const {currency, loading, setLoading} = useContext(ShopContext);
   const [orders, setOrders] = useState([]);
   const [items, setItems] = useState([]);
 
@@ -15,6 +16,7 @@ const Orders = ({sellerToken, userEmail, userBusinessScale}) => {
       return null;
     }
 
+    setLoading(true);
     try {
       const res = await axios.post(`${backendURL}/api/orders/get-by-seller`, {userEmail}, {headers: {sellerToken}});
       if (res.data.status === "successful") {
@@ -26,6 +28,8 @@ const Orders = ({sellerToken, userEmail, userBusinessScale}) => {
     } catch (error) {
       console.log(error);
             toast.error(error.response?.data?.message || error.message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -45,6 +49,7 @@ const Orders = ({sellerToken, userEmail, userBusinessScale}) => {
   }
 
   const handleStatusUpdates = async (e, orderId, itemId, selectedColor="", selectedMode="") => {
+    setLoading(true);
     try {
       const res = await axios.post(`${backendURL}/api/orders/update`, {orderId, itemId, selectedColor, selectedMode, updateFields: {status: e.target.value} }, {headers: {sellerToken}});
       if (res.data.status === "successful") {
@@ -53,6 +58,8 @@ const Orders = ({sellerToken, userEmail, userBusinessScale}) => {
     } catch (error) {
       console.log(error);
                     toast.error(error.response?.data?.message || error.message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -63,6 +70,12 @@ const Orders = ({sellerToken, userEmail, userBusinessScale}) => {
   useEffect(() => {
     fetchOrders();
   }, [sellerToken]);
+
+    if (loading) {
+  return (
+        <Spinner />  
+  );
+}
 
   return (
     

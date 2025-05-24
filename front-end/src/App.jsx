@@ -71,6 +71,7 @@ const App = () => {
               <Route path="/checkout" element={<Checkout token={token} sellerToken={sellertoken} userEmail={userEmail}/>} />
               <Route path="/sell/*" element={<Sell sellerToken={sellertoken} userEmail={userEmail} userBusinessScale={userBusinessScale}/>} />
               <Route path="/validate" element={<Validate token={token}/>} />
+              
             </Routes>
           </div>
 

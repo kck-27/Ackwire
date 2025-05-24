@@ -12,6 +12,7 @@ export const ShopContext = createContext();
 
 const ShopContextProvider = (props) => {
 
+    const [loading, setLoading] = useState(false);
     const currency = '$';
     const delivery_fee = 30;
     const [search, setSearch] = useState('');
@@ -57,6 +58,7 @@ const ShopContextProvider = (props) => {
         if(localStorage.getItem("token") !== "") {
             try {
                 await axios.post(`${backendURL}/api/cart/add`, {itemId, attribute}, {headers: {token: localStorage.getItem("token")}});
+                toast.success("Added to your cart");
             } catch (error) {
                 console.log(error);
                 toast.error(error.response?.data?.message || error.message);
@@ -162,7 +164,7 @@ const ShopContextProvider = (props) => {
 
     useEffect(() => {
         fetchItems();
-    }, []);
+    }, [navigate]);
 
     useEffect(() => {
         if (localStorage.getItem("token") !== "") {
@@ -174,7 +176,7 @@ const ShopContextProvider = (props) => {
     }, [localStorage.getItem("token")]);
 
     const value = {
-        products, services, currency, delivery_fee, search, setSearch, displaySearch, setDisplaySearch, cartItems, setCartItems, addToCart, getQuantityByItem, getTotalQuantity, updateQuantity, getFullCost, navigate
+        products, services, currency, delivery_fee, search, setSearch, displaySearch, setDisplaySearch, cartItems, setCartItems, addToCart, getQuantityByItem, getTotalQuantity, updateQuantity, getFullCost, navigate, loading, setLoading
     }
 
     return (

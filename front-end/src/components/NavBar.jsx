@@ -3,10 +3,17 @@ import { assets } from "../assets/assets";
 import { Link, NavLink } from "react-router-dom";
 import { ShopContext } from "../context/ShopContext";
 import { toast } from "react-toastify";
+import Spinner from "./Spinner";
 
 const NavBar = ({token, sellerToken, setToken, setSellertoken, setUserEmail, setUserBusinessScale}) => {
   const [visible, setVisible] = useState(false);
-  const {setDisplaySearch, getTotalQuantity, navigate} = useContext(ShopContext);
+  const {displaySearch, setDisplaySearch, getTotalQuantity, navigate, loading, setLoading} = useContext(ShopContext);
+
+    if (loading) {
+  return (
+        <Spinner />  
+  );
+}
 
   return (
     <div className="flex items-center justify-between py-5 font-medium">
@@ -14,34 +21,34 @@ const NavBar = ({token, sellerToken, setToken, setSellertoken, setUserEmail, set
       <Link to='/'><img src={assets.ackwire_logo} className="w-28" alt="" /></Link>
       
       <ul className="hidden sm:flex gap-5 text-sm text-gray-700">
-        <NavLink to="/" className="flex flex-col gap-1 items-center">
+        <NavLink to="/" className="flex flex-col gap-1 items-center" onClick={() => setLoading(true)}>
           <p>HOME</p>
           <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
         </NavLink>
 
-        <NavLink to="/products" className="flex flex-col gap-1 items-center">
+        <NavLink to="/products" className="flex flex-col gap-1 items-center" onClick={() => setLoading(true)}>
           <p>PRODUCTS</p>
           <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
         </NavLink>
 
-        <NavLink to="/services" className="flex flex-col gap-1 items-center">
+        <NavLink to="/services" className="flex flex-col gap-1 items-center" onClick={() => setLoading(true)}>
           <p>SERVICES</p>
           <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
         </NavLink>
 
-        <NavLink to="/about" className="flex flex-col gap-1 items-center">
+        <NavLink to="/about" className="flex flex-col gap-1 items-center" onClick={() => setLoading(true)}>
           <p>ABOUT US</p>
           <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
         </NavLink>
 
-        <NavLink to="/contacts" className="flex flex-col gap-1 items-center">
+        <NavLink to="/contacts" className="flex flex-col gap-1 items-center" onClick={() => setLoading(true)}>
           <p>CONTACTS</p>
           <hr className="w-2/4 border-none h-[1.5px] bg-gray-700 hidden" />
         </NavLink>
       </ul>
 
       <div className="flex items-center gap-6">
-        <img onClick={() => setDisplaySearch(true)} src={assets.search_icon} className="w-5 cursor-pointer" alt="" />
+        <img onClick={() => setDisplaySearch(!displaySearch)} src={assets.search_icon} className="w-5 cursor-pointer" alt="" />
         <div className="group relative">
           {token === "" ? <Link to={'/sign-in'}>
           <img
@@ -61,7 +68,7 @@ const NavBar = ({token, sellerToken, setToken, setSellertoken, setUserEmail, set
               <p className="cursor-pointer hover:text-black">My Profile</p>
               <p onClick={() => {if(token) {navigate('/purchases')} else {toast.info("Please sign in to perform this action"); navigate('/sign-in')}}} className="cursor-pointer hover:text-black">Purchases</p>
               {sellerToken === "" ? "" : <p className="cursor-pointer hover:text-black" onClick={() => navigate('/sell')}>Sell</p>}
-              {token === "" ? <p onClick={() => {navigate('/sign-in')}} className="cursor-pointer  hover:text-black">Sign In</p> : <p onClick={() => {setToken(""); setSellertoken(""); setUserEmail(""); setUserBusinessScale(""); navigate('/sign-in')}} className="cursor-pointer  hover:text-black">Sign Out</p>}
+              {token === "" ? <p onClick={() => {setLoading(true); navigate('/sign-in')}} className="cursor-pointer  hover:text-black">Sign In</p> : <p onClick={() => {setToken(""); setSellertoken(""); setUserEmail(""); setUserBusinessScale(""); setLoading(true); navigate('/sign-in')}} className="cursor-pointer  hover:text-black">Sign Out</p>}
 
             </div>
           </div>
@@ -105,13 +112,30 @@ const NavBar = ({token, sellerToken, setToken, setSellertoken, setUserEmail, set
           </div>
 
           <div className="w-full items-center flex flex-col">
+          <NavLink onClick={() => {setVisible(false); if(token) {navigate('/purchases')} else {toast.info("Please sign in to perform this action"); navigate('/sign-in')}}} to="/purchases" className="py-3">PURCHASES</NavLink>
+            <hr className="w-3/4 border-none h-[0.25px] bg-gray-400" />
+          </div>
+
+          {sellerToken === "" ? "" : <div className="w-full items-center flex flex-col">
+          <NavLink onClick={() => {setVisible(false); navigate('/sell')}} to="/sell" className="py-3">SELL</NavLink>
+            <hr className="w-3/4 border-none h-[0.25px] bg-gray-400" />
+          </div>}
+
+          <div className="w-full items-center flex flex-col">
           <NavLink onClick={() => setVisible(false)} to="/about" className="py-3">ABOUT US</NavLink>
             <hr className="w-3/4 border-none h-[0.25px] bg-gray-400" />
           </div>
 
           <div className="w-full items-center flex flex-col">
           <NavLink onClick={() => setVisible(false)} to="/contacts" className="py-3">CONTACTS</NavLink>
+          <hr className="w-3/4 border-none h-[0.25px] bg-gray-400" />
           </div>
+
+          {token === "" ? <div className="w-full items-center flex flex-col">
+          <NavLink onClick={() => {setVisible(false); setLoading(true); navigate('/sign-in')}} to="/sign-in" className="py-3">SIGN IN</NavLink>
+          </div> : <div className="w-full items-center flex flex-col">
+          <NavLink onClick={() => {setVisible(false); setToken(""); setSellertoken(""); setUserEmail(""); setUserBusinessScale(""); setLoading(true); navigate('/sign-in')}} to="/sign-in" className="py-3">SIGN OUT</NavLink>
+          </div>}
           
           
         </div>

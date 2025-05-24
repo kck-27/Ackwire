@@ -1006,7 +1006,7 @@ export const products = [
       {
         _id: "saaaaq",
         name: "Interior Design Service",
-        description: "Creative interior design services to transform spaces with aesthetic designs, including furniture selection, layout planning, and styling.",
+        description: "Bluetooth Headphones",
         price: 600,
         image: [saaaaq_img1, saaaaq_img2, saaaaq_img3, saaaaq_img4, saaaaq_img5, saaaaq_img6],
         category: "Design Services",

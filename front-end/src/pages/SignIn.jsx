@@ -1,11 +1,14 @@
-import React, { useEffect } from "react";
+import React, { useContext, useEffect } from "react";
 import { useState } from "react";
 import { backendURL } from "../App";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { ShopContext } from "../context/ShopContext";
+import Spinner from "../components/Spinner";
 
 const SignIn = ({ setToken, setSellertoken, setUserEmail, setUserBusinessScale }) => {
+  const {navigate, loading, setLoading} = useContext(ShopContext);
   const [currentState, setCurrentState] = useState("Sign Up");
   const [userType, setUserType] = useState("");
   const [name, setName] = useState("");
@@ -13,11 +16,11 @@ const SignIn = ({ setToken, setSellertoken, setUserEmail, setUserBusinessScale }
   const [password, setPassword] = useState("");
   const [businessScale, setBusinessScale] = useState("");
 
-  const navigate = useNavigate();
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
     if (currentState === "Login") {
+      setLoading(true);
       try {
         const res = await axios.post(backendURL + "/api/user/sign-in", {
           email,
@@ -40,9 +43,12 @@ const SignIn = ({ setToken, setSellertoken, setUserEmail, setUserBusinessScale }
       } catch (error) {
         console.log(error);
         toast.error(error.response?.data?.message || error.message);
+      } finally {
+        setLoading(false);
       }
     } else {
       if (userType === "buyer") {
+        setLoading(true);
         try {
           const res = await axios.post(backendURL + "/api/user/sign-up", {
             name,
@@ -58,8 +64,11 @@ const SignIn = ({ setToken, setSellertoken, setUserEmail, setUserBusinessScale }
         } catch (error) {
           console.log(error);
           toast.error(error.response?.data?.message || error.message);
+        } finally {
+          setLoading(false);
         }
       } else if (userType === "seller") {
+        setLoading(true);
         try {
           const res = await axios.post(backendURL + "/api/user/sign-up", {
             name,
@@ -76,12 +85,26 @@ const SignIn = ({ setToken, setSellertoken, setUserEmail, setUserBusinessScale }
         } catch (error) {
           console.log(error);
           toast.error(error.response?.data?.message || error.message);
+        } finally {
+          setLoading(false);
         }
       }
     }
   };
 
-  useEffect(() => {}, [userType]);
+    useEffect(() => {
+setLoading(false);
+  }, []);
+
+  useEffect(() => {
+
+  }, [userType]);
+
+    if (loading) {
+  return (
+        <Spinner />  
+  );
+}
 
   return (
     <div className="border-t border-gray-300">

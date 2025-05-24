@@ -1,9 +1,17 @@
-import React from 'react'
+import React, { useContext, useEffect } from 'react'
 import Title from '../components/Title'
 import { assets } from '../assets/assets'
 import NewsletterBox from '../components/NewsletterBox'
+import { ShopContext } from '../context/ShopContext'
 
 const About = () => {
+
+const {loading, setLoading} = useContext(ShopContext);
+
+useEffect(() => {
+setLoading(false);
+}, []);
+
   return (
     <div className='border-t border-gray-300 pt-14'>
       <div className='text-4xl text-center'>

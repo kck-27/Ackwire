@@ -4,10 +4,11 @@ import { useState } from 'react'
 import { assets } from '../assets/assets';
 import Title from '../components/Title';
 import ServiceItem from '../components/ServiceItem';
+import Spinner from '../components/Spinner';
 
 const Services = () => {
 
-  const { services, search, displaySearch } = useContext(ShopContext);
+  const { services, search, displaySearch, loading, setLoading } = useContext(ShopContext);
     const [showFilter, setShowFilter] = useState(false);
     const [filterServices, setFilterServices] = useState([]);
     const [category, setCategory] = useState([]);
@@ -21,23 +22,28 @@ const Services = () => {
     // };
   
     const filterCategory = (e) => {
+      setLoading(true);
       if(category.includes(e.target.value)){
         setCategory(category.filter(item => item !== e.target.value))
       } else {  
         setCategory([...category, e.target.value])
       }
+      setLoading(false);
     }
   
     const filterCompanyScale = (e) => {
+      setLoading(true);
       // const mappedValue = companyScaleMapping[e.target.value];
       if(companyScale.includes(e.target.value)){
         setCompanyScale(companyScale.filter(item => item !== e.target.value))
       } else {  
         setCompanyScale([...companyScale, e.target.value])
       }
+      setLoading(false);
     }
   
     const applyFilter = () => {
+      setLoading(true);
       let filteredServices = services.slice();
   
       if(displaySearch && search){
@@ -66,9 +72,11 @@ const Services = () => {
         filteredServices = filteredServices.sort((a, b) => b.price - a.price);
       }
       setFilterServices(filteredServices)
+      setLoading(false);
     }
   
     const sortServices = () => {
+      setLoading(true);
       let tempFilteredServices = filterServices.slice();
       
       switch(sortOption){
@@ -82,15 +90,26 @@ const Services = () => {
           applyFilter();
           break;
       }
+      setLoading(false);
     }
   
     useEffect(() => {
+      setLoading(true);
       sortServices()
+      setLoading(false);
     }, [sortOption])
   
     useEffect(() => {
+      setLoading(true);
       applyFilter()
+      setLoading(false);
     }, [category, companyScale, search, displaySearch, services])
+
+      if (loading) {
+  return (
+        <Spinner />  
+  );
+}
 
   return (
     <div className='flex flex-col sm:flex-row gap-1 sm:gap-10 pt-10 border-t border-gray-300 mb-20'>

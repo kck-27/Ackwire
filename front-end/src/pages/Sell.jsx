@@ -4,6 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import Publish from "./Publish";
 import List from "./List";
 import Orders from "./Orders";
+import Edit from "./edit";
 
 const Sell = ({ sellerToken, userEmail, userBusinessScale }) => {
   return (
@@ -19,6 +20,7 @@ const Sell = ({ sellerToken, userEmail, userBusinessScale }) => {
                     <Route path="/publish" element={<Publish sellerToken={sellerToken} userEmail={userEmail} userBusinessScale={userBusinessScale}/>} />
                     <Route path="/list" element={<List sellerToken={sellerToken} userEmail={userEmail} userBusinessScale={userBusinessScale}/>} />
                     <Route path="/orders" element={<Orders sellerToken={sellerToken} userEmail={userEmail} userBusinessScale={userBusinessScale}/>} />
+                    <Route path="/edit" element={<Edit sellerToken={sellerToken} userEmail={userEmail} userBusinessScale={userBusinessScale}/>} />
                 </Routes>
             </div>
           </div>
