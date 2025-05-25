@@ -4,10 +4,10 @@ import {Link} from 'react-router-dom';
 
 const ServiceItem = ({id, name, images, price}) => {
 
-    const {currency} = useContext(ShopContext);
+    const {currency, loading, setLoading} = useContext(ShopContext);
 
   return (
-    <Link className='text-gray-700 cursor-pointer' to={`/service/${id}`}>
+    <Link className='text-gray-700 cursor-pointer' onClick={() => setLoading(true)} to={`/service/${id}`}>
             <div className='overflow-hidden'>
                 <img className='hover:scale-110 transition ease-in-out rounded-2xl' src={images[0]} alt="" />
             </div>

@@ -80,7 +80,7 @@ const Cart = () => {
       
 
     </div>
-  ) : <div className='border-t border-gray-300 pt-14 text-center'>
+  ) : <div className='border-t min-h-[500px] sm:min-h-[700px] border-gray-300 pt-14 text-center'>
     <div className='text-3xl mb-3'>
         <Title text1={'YOUR CART IS'} text2={'EMPTY'}/>
       </div>

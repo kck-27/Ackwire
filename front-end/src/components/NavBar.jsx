@@ -65,9 +65,9 @@ const NavBar = ({token, sellerToken, setToken, setSellertoken, setUserEmail, set
           
           <div className="group-hover:block hidden absolute dropdown-menu right-0 pt-4">
             <div className="flex flex-col gap-2 w-50 py-3 px-5 bg-slate-100 text-gray-500 rounded">
-              <p className="cursor-pointer hover:text-black">My Profile</p>
+              <p onClick={() => {if(token) {navigate('/profile')} else {toast.info("Please sign in to perform this action"); navigate('/sign-in')}}} className="cursor-pointer hover:text-black">My Profile</p>
               <p onClick={() => {if(token) {navigate('/purchases')} else {toast.info("Please sign in to perform this action"); navigate('/sign-in')}}} className="cursor-pointer hover:text-black">Purchases</p>
-              {sellerToken === "" ? "" : <p className="cursor-pointer hover:text-black" onClick={() => navigate('/sell')}>Sell</p>}
+              {sellerToken === "" ? "" : <p className="cursor-pointer hover:text-black" onClick={() => navigate('/sell/publish')}>Sell</p>}
               {token === "" ? <p onClick={() => {setLoading(true); navigate('/sign-in')}} className="cursor-pointer  hover:text-black">Sign In</p> : <p onClick={() => {setToken(""); setSellertoken(""); setUserEmail(""); setUserBusinessScale(""); setLoading(true); navigate('/sign-in')}} className="cursor-pointer  hover:text-black">Sign Out</p>}
 
             </div>
@@ -117,7 +117,7 @@ const NavBar = ({token, sellerToken, setToken, setSellertoken, setUserEmail, set
           </div>
 
           {sellerToken === "" ? "" : <div className="w-full items-center flex flex-col">
-          <NavLink onClick={() => {setVisible(false); navigate('/sell')}} to="/sell" className="py-3">SELL</NavLink>
+          <NavLink onClick={() => {setVisible(false); navigate('/sell/publish')}} to="/sell" className="py-3">SELL</NavLink>
             <hr className="w-3/4 border-none h-[0.25px] bg-gray-400" />
           </div>}
 

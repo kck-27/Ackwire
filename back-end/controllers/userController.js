@@ -7,6 +7,35 @@ const createToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET_KEY);
 };
 
+
+const getById = async (req, res) => {
+  try {
+    const {userId} = req.body;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res
+        .status(400)
+        .json({ status: "unsuccessful", message: "Invalid user id" });
+    }
+
+    res.status(200).json({
+        status: "successful",
+        userObject: {
+          name: user.name,
+          email: user.email,
+          userType: user.userType,
+          businessScale: user.businessScale
+        },
+      });
+
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ message: error.message });
+  }
+}
+
 const signIn = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -171,4 +200,4 @@ const adminSignIn = async (req, res) => {
   }
 };
 
-export { signIn, signUp, adminSignIn };
+export { signIn, signUp, adminSignIn, getById };

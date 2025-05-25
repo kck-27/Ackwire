@@ -115,13 +115,14 @@ const Service = () => {
       {/* Additional Information/Reviews */}
       <div className='mt-20'>
         <div className='flex'>
-          <p className='border border-gray-500 px-5 py-3 text-lg font-bold rounded-tl-2xl'>Additional Information</p>
-          <p className='border border-gray-300 px-5 py-3 text-lg  rounded-tr-2xl'>Customer Reviews</p>
+          <p className='border-t border-l border-r border-gray-400 px-5 py-3 text-lg rounded-tl-2xl rounded-tr-2xl'>Additional Information</p>
+          {/* <p className='border border-gray-300 px-5 py-3 text-lg  rounded-tr-2xl'>Customer Reviews</p> */}
         </div>
         <div className='flex flex-col gap-4 p-6 justify-start items-start text-sm border border-gray-400 rounded-2xl rounded-tl-none text-gray-500'>
         {
             serviceObject.more_info.map((info_item, index) => (
-              <i className='text-lg font-medium my-6 mx-15' key={index}>{info_item}</i>
+                              <p className='text-[13px] font-medium my-3 sm:my-6 sm:mx-15 flex' key={index}><span className='pr-4 mt-4'><img className='w-5 h-5' src={assets.dropdown_icon} alt="" /></span>{info_item}</p>
+
             ))
           }
         </div>

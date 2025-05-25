@@ -18,6 +18,7 @@ import Checkout from "./pages/Checkout";
 import { ToastContainer, toast } from "react-toastify";
 import Sell from "./pages/Sell";
 import Validate from "./pages/Validate";
+import Profile from "./pages/Profile";
 
 export const backendURL = import.meta.env.VITE_BACKEND_URL;
 export const currency = import.meta.env.VITE_CURRENCY;
@@ -71,6 +72,7 @@ const App = () => {
               <Route path="/checkout" element={<Checkout token={token} sellerToken={sellertoken} userEmail={userEmail}/>} />
               <Route path="/sell/*" element={<Sell sellerToken={sellertoken} userEmail={userEmail} userBusinessScale={userBusinessScale}/>} />
               <Route path="/validate" element={<Validate token={token}/>} />
+              <Route path="/profile" element={<Profile token={token}/>} />
               
             </Routes>
           </div>
