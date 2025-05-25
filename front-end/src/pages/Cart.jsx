@@ -5,8 +5,9 @@ import { useState } from 'react'
 import Title from '../components/Title'
 import {assets} from '../assets/assets'
 import CartCost from '../components/CartCost'
+import { toast } from 'react-toastify'
 
-const Cart = () => {
+const Cart = ({token}) => {
 
   const {products, services, currency, cartItems, getTotalQuantity, getQuantityByItem, updateQuantity, navigate} = useContext(ShopContext);
   const [cartDetails, setCartDetails] = useState([]);
@@ -72,7 +73,7 @@ const Cart = () => {
           <div className='w-9/10 sm:w-[600px]'>
           <CartCost/>
           <div className='w-full text-end'>
-            <button onClick={() => navigate('/checkout')} className='text-sm bg-black text-white mt-5 mb-5 px-8 py-3 active:bg-gray-800 cursor-pointer'>CHECKOUT</button>
+            <button onClick={() => {if (token)  {navigate('/checkout');} else {toast.error("Please sign in to go the checkout."); navigate('/sign-in');}}} className='text-sm bg-black text-white mt-5 mb-5 px-8 py-3 active:bg-gray-800 cursor-pointer'>CHECKOUT</button>
           </div>
           </div>
         
