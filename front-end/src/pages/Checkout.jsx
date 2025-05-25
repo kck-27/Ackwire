@@ -152,7 +152,7 @@ const Checkout = ({token, sellertoken, userEmail}) => {
 
             <div className='mt-12 text-xl sm:text-2xl'>
                 <Title text1='CHOOSE' text2='PAYMENT METHOD'/>
-                <div className='gap-3 flex flex-col lg:flex-row'>
+                <div className='gap-3 flex flex-col lg:flex-row relative z-10'>
                     <div onClick={() => setPaymentMethod('stripe')} className={`flex items-center gap-2 p-2 px-3 border border-gray-300 cursor-pointer ${paymentMethod === 'stripe' ? 'border-gray-600' : ''}`}>
                         <p className={`min-w-3.5 h-3.5 rounded-full border border-gray-300 ${paymentMethod === 'stripe' ? 'bg-gray-800' : ''}`}></p>
                         <img className='h-5 mx-4' src={assets.stripe_logo} alt="" />
