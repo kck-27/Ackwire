@@ -146,7 +146,7 @@ const Checkout = ({token, sellertoken, userEmail}) => {
         </div>
 
         <div className='mt-8'>
-            <div className='mt-8 min-w-120'>
+            <div className='mt-8 '>
                 <CartCost/>
             </div>
 
