@@ -178,7 +178,7 @@ setLoading(false);
         ) : (
           ""
         )}
-        <div className="w-full flex justify-between px-2 text-sm sm:text-md mt-[-4px]">
+        <div className="w-full flex justify-between px-2 text-sm md:text-md mt-[-4px]">
           <p className="cursor-pointer">FORGOT YOUR PASSWORD?</p>
           {currentState === "Login" ? (
             <p
