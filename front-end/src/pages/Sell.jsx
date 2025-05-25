@@ -4,7 +4,7 @@ import { Route, Routes } from "react-router-dom";
 import Publish from "./Publish";
 import List from "./List";
 import Orders from "./Orders";
-import Edit from "./edit";
+import Edit from "./Edit";
 
 const Sell = ({ sellerToken, userEmail, userBusinessScale }) => {
   return (
