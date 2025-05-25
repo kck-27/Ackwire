@@ -154,7 +154,7 @@ const Checkout = ({token, sellertoken, userEmail}) => {
                 <Title text1='CHOOSE' text2='PAYMENT METHOD'/>
                 <div className='gap-3 flex flex-col lg:flex-row relative z-10'>
                     <div onClick={() => setPaymentMethod('stripe')} className={`flex items-center gap-2 p-2 px-3 border border-gray-300 cursor-pointer ${paymentMethod === 'stripe' ? 'border-gray-600' : ''}`}>
-                        <p className={`min-w-3.5 h-3.5 rounded-full border border-gray-300 ${paymentMethod === 'stripe' ? 'bg-gray-800' : ''}`}></p>
+                        <p className={`w-4 h-4  rounded-full border border-gray-300 ${paymentMethod === 'stripe' ? 'bg-gray-800' : ''}`}></p>
                         <img className='h-5 mx-4' src={assets.stripe_logo} alt="" />
                     </div>
                     {/* <div onClick={() => setPaymentMethod('razor_pay')} className={`flex items-center gap-2 p-2 px-3 border border-gray-300 cursor-pointer ${paymentMethod === 'razor_pay' ? 'border-gray-600' : ''}`}>
@@ -162,7 +162,7 @@ const Checkout = ({token, sellertoken, userEmail}) => {
                         <img className='h-5 mx-4' src={assets.razorpay_logo} alt="" />
                     </div> */}
                     <div onClick={() => setPaymentMethod('cash_on_delivery')} className={`flex items-center gap-2 p-2 px-3 border border-gray-300 cursor-pointer ${paymentMethod === 'cash_on_delivery' ? 'border-gray-600' : ''}`}>
-                        <p className={`min-w-3.5 h-3.5 rounded-full border border-gray-300 ${paymentMethod === 'cash_on_delivery' ? 'bg-gray-800' : ''}`}></p>
+                        <p className={`w-4 h-4  rounded-full border border-gray-300 ${paymentMethod === 'cash_on_delivery' ? 'bg-gray-800' : ''}`}></p>
                         <p className='text-gray-600 text-lg font-medium mx-4'>CASH ON DELIVERY</p>
                     </div>
                 </div>
