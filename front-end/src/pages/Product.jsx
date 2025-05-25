@@ -42,7 +42,7 @@ const Product = () => {
       <div className='flex flex-col sm:flex-row gap-12 sm:gap-12'>
         {/* Rendering Images */}
         <div className='flex-1 flex flex-col-reverse sm:flex-row gap-5'>
-          <div className='flex sm:flex-col overflow-x-auto sm:overflow-y-scroll justify-between sm:justify-normal w-full sm:w-[10%]'>
+          <div className='flex sm:flex-col overflow-x-auto sm:overflow-y-scroll gap-3 sm:gap-0 justify-start sm:justify-normal w-full sm:w-[10%]'>
             {
               productObject.image.map((imageItem, index) => (
                 <img onClick={() => setImage(imageItem)} key={index} src={imageItem} alt={productObject.title} className={`w-[24%] sm:mb-3 sm:w-full flex-shrink-0 cursor-pointer border rounded-2xl ${imageItem === image ? 'border-gray-500 border-4' : 'border-transparent'}`}/>
